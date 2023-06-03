@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">StuntCare</string>
+    <string name="banner_1">Banner 1</string>
+    <string name="banner_2">Banner 2</string>
+    <string name="banner_3">Banner 3</string>
+    <string name="jargon_1">Yuk! Cek kesehatan anak anda sekarang</string>
 </resources>
