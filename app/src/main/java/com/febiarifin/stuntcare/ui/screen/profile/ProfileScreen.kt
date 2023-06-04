@@ -1,6 +1,8 @@
 import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.febiarifin.stuntcare.model.Check
+import com.febiarifin.stuntcare.ui.components.BottomSheetLayout
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -40,12 +44,7 @@ fun ProfileScreen() {
             )
         },
     ) {
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-        ) {
 
-        }
     }
 }
 

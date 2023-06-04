@@ -84,18 +84,7 @@ fun CheckItem(
 fun CheckItemPreview() {
     StuntCareTheme {
         CheckItem(
-            Check(
-                1,
-                "Anak 3",
-                "Laki-laki",
-                "2",
-                "1.5",
-                "40",
-                "4",
-                "80",
-                "Ya",
-                0.4
-            )
+            Check(1, "Anak 1", "Laki-laki", "2", "1.5", "40", "4", "80", "Ya", 0.4),
         )
     }
 }
