@@ -25,7 +25,7 @@ fun BannerItem(
         contentDescription = null,
         modifier = modifier
             .width(300.dp)
-            .height(144.dp)
+            .height(120.dp)
             .clip(RoundedCornerShape(16.dp)),
         contentScale = ContentScale.Crop
     )
