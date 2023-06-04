@@ -96,11 +96,15 @@ fun HomeScreen() {
         ) {
             BannerHeader()
             Spacer(modifier = Modifier.height(24.dp))
-            SectionText(stringResource(R.string.section_banner))
-            BannerRow()
+            HomeSection(
+                title = stringResource(R.string.section_banner),
+                content = {BannerRow()}
+            )
             Spacer(modifier = Modifier.height(24.dp))
-            SectionText(stringResource(R.string.section_article))
-            ArticleRow(dummyArticle)
+            HomeSection(
+                title = stringResource(R.string.section_article),
+                content = {   ArticleRow(dummyArticle)}
+            )
         }
     }
 
@@ -163,7 +167,7 @@ private fun BannerHeader(
                         contentDescription = null
                     )
                     Spacer(modifier = modifier.width(6.dp))
-                    Text("Buat Prediksi")
+                    Text("Cek Status Stunting")
                 }
             }
         }
