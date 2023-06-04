@@ -5,8 +5,8 @@ import androidx.annotation.StringRes
 import com.febiarifin.stuntcare.R
 
 data class Banner(
-    @DrawableRes val imageCategory: Int,
-    @StringRes val textCategory: Int,
+    @DrawableRes val image: Int,
+    @StringRes val text: Int,
 )
 
 val dummyBanner = listOf(

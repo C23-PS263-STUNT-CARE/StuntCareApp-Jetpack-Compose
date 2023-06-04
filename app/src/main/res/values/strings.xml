@@ -4,4 +4,6 @@
     <string name="banner_2">Banner 2</string>
     <string name="banner_3">Banner 3</string>
     <string name="jargon_1">Yuk! Cek kesehatan anak anda sekarang</string>
+    <string name="section_banner">Info Kesehatan</string>
+    <string name="section_article">Artikel Terbaru</string>
 </resources>
