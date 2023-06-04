@@ -1,5 +1,6 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.febiarifin.stuntcare.R
@@ -33,10 +35,18 @@ import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 @Composable
 fun ArticleItem(
     article: Article,
+    width: Dp,
+    height: Dp,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.width(200.dp),
+        modifier = modifier
+            .width(width)
+            .border(
+                1.dp,
+                shape = RoundedCornerShape(16.dp),
+                color = Color.Gray.copy(alpha = 0.3f)
+            ),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -49,11 +59,11 @@ fun ArticleItem(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(130.dp)
+                    .height(height)
             )
         }
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(8.dp)
         ){
             Box(
@@ -72,7 +82,7 @@ fun ArticleItem(
                     textAlign = TextAlign.Center
                 )
             }
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = modifier.height(4.dp))
             Text(
                 text = article.title,
                 maxLines = 2,
@@ -80,7 +90,7 @@ fun ArticleItem(
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = modifier.height(4.dp))
             Text(
                 text = article.date,
                 fontSize = 12.sp,
@@ -102,7 +112,8 @@ fun ArticleItemPreview() {
                 "Lorem",
                 "29 Mei 2023"
             ),
-            modifier = Modifier.padding(8.dp)
+            200.dp,
+            120.dp,
         )
     }
 }

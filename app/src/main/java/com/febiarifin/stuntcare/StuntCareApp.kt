@@ -27,9 +27,7 @@ import com.febiarifin.stuntcare.ui.common.BottomNavGraph
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun StuntCareApp(
-    modifier: Modifier = Modifier
-) {
+fun StuntCareApp() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
@@ -84,7 +82,8 @@ fun RowScope.AddItem(
         colors = androidx.compose.material3.NavigationBarItemDefaults
             .colors(
                 selectedIconColor = MaterialTheme.colorScheme.secondary,
-                indicatorColor = MaterialTheme.colorScheme.surfaceColorAtElevation(LocalAbsoluteTonalElevation.current)
+                indicatorColor = MaterialTheme.colorScheme.surfaceColorAtElevation(LocalAbsoluteTonalElevation.current),
+                selectedTextColor = MaterialTheme.colorScheme.secondary,
             )
     )
 }

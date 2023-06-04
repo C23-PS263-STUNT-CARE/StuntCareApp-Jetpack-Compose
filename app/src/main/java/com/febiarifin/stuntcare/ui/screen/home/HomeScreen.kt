@@ -87,7 +87,11 @@ fun HomeScreen() {
                         )
                     }
                     Spacer(Modifier.width(10.dp))
-                }
+                },
+                modifier = Modifier.border(
+                    1.dp,
+                    color = Color.Gray.copy(alpha = 0.3f)
+                ),
             )
         },
     ) {
@@ -186,7 +190,10 @@ private fun BannerRow(
         contentPadding = PaddingValues(horizontal = 16.dp),
     ){
         items(dummyBanner, key = {it.text}){banner->
-            BannerItem(banner)
+            BannerItem(
+                banner,
+                modifier = Modifier.clickable{}
+            )
         }
     }
 }
@@ -202,7 +209,12 @@ fun ArticleRow(
         modifier = modifier
     ){
         items(listArticle, key = {it.id}){ article ->
-            ArticleItem(article)
+            ArticleItem(
+                article,
+                200.dp,
+                120.dp,
+                modifier = Modifier.clickable{}
+            )
         }
     }
 }
