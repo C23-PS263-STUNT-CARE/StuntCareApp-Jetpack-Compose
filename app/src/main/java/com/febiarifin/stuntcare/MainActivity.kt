@@ -1,6 +1,7 @@
 package com.febiarifin.stuntcare
 
 import StuntCareApp
+import StuntCareLightTheme
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -20,11 +21,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            StuntCareTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    StuntCareApp()
-                }
+            StuntCareLightTheme {
+                StuntCareApp()
             }
         }
     }
 }
+
+
+

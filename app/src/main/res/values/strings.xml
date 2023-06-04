@@ -6,4 +6,7 @@
     <string name="jargon_1">Yuk! Cek kesehatan anak anda sekarang</string>
     <string name="section_banner">Info Kesehatan</string>
     <string name="section_article">Artikel Terbaru</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_check">Check</string>
+    <string name="menu_education">Education</string>
 </resources>

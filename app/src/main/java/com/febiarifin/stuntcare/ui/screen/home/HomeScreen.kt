@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -80,7 +81,7 @@ fun HomeScreen() {
                         contentAlignment = androidx.compose.ui.Alignment.Center
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_person),
+                            painter = painterResource(R.drawable.ic_notifications),
                             contentDescription = null,
                             tint = Color.Black
                         )
@@ -88,11 +89,11 @@ fun HomeScreen() {
                     Spacer(Modifier.width(10.dp))
                 }
             )
-        }
+        },
     ) {
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
+                        .verticalScroll(rememberScrollState())
         ) {
             BannerHeader()
             Spacer(modifier = Modifier.height(24.dp))
@@ -105,6 +106,7 @@ fun HomeScreen() {
                 title = stringResource(R.string.section_article),
                 content = {   ArticleRow(dummyArticle)}
             )
+            Spacer(modifier = Modifier.height(120.dp))
         }
     }
 

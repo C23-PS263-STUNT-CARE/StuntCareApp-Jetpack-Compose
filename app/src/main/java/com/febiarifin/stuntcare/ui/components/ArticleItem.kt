@@ -39,7 +39,7 @@ fun ArticleItem(
         modifier = modifier.width(200.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.Gray.copy(alpha = 0.1f),
+            containerColor = Color.White,
         ),
     ) {
         Column {
@@ -72,17 +72,19 @@ fun ArticleItem(
                     textAlign = TextAlign.Center
                 )
             }
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = article.title,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
             )
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = article.date,
                 fontSize = 12.sp,
-                color = Color.Gray.copy(alpha = 0.5f),
+                color = Color.Gray.copy(alpha = 0.8f),
             )
         }
     }
