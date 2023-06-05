@@ -39,4 +39,8 @@ sealed class BottomBarScreen(
     object DetailCheck: BottomBarScreen("check/{checkId}"){
         fun createRoute(checkId: Long) = "check/$checkId"
     }
+
+    object FormCheck: BottomBarScreen("formcheck"){
+        fun createRoute() = "formcheck"
+    }
 }

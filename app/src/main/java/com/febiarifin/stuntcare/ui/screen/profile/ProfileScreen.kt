@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.febiarifin.stuntcare.model.Check
-import com.febiarifin.stuntcare.ui.components.BottomSheetLayout
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

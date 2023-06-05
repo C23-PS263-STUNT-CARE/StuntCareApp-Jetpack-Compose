@@ -32,7 +32,7 @@ fun StuntCareApp() {
 
     Scaffold(
         bottomBar = {
-            if (currentRoute != BottomBarScreen.DetailCheck.route) {
+            if (currentRoute != BottomBarScreen.DetailCheck.route && currentRoute != BottomBarScreen.FormCheck.route) {
                 BottomBar(navController = navController)
             }
         }

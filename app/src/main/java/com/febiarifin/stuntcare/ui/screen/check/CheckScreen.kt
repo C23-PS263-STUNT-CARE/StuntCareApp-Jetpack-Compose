@@ -68,7 +68,6 @@ import com.febiarifin.stuntcare.model.Article
 import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.model.dummyArticle
 import com.febiarifin.stuntcare.model.dummyCheck
-import com.febiarifin.stuntcare.ui.components.BottomSheetLayout
 import com.febiarifin.stuntcare.ui.screen.check.CheckViewModel
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 import kotlinx.coroutines.launch
@@ -86,6 +85,7 @@ fun CheckScreen(
         factory = CheckViewModelFactory(Injection.provideCheckRepository())
     ),
     navigateToDetailCheck: (Long) -> Unit,
+    navigateToFormCheck: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -115,6 +115,7 @@ fun CheckScreen(
                     CheckList(
                         uiState.data,
                         navigateToDetailCheck = navigateToDetailCheck,
+                        navigateToFormCheck = navigateToFormCheck,
                     )
                 }
                 is UiState.Error -> {}
@@ -129,13 +130,15 @@ fun CheckList(
     listCheck: List<Check>,
     modifier: Modifier = Modifier,
     navigateToDetailCheck: (Long) -> Unit,
+    navigateToFormCheck: () -> Unit,
 ) {
     Column {
         Spacer(modifier = Modifier.height(60.dp))
         if (listCheck.isEmpty()) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(0.dp, 0.dp, 0.dp,80.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -171,7 +174,7 @@ fun CheckList(
                         )
                         Spacer(modifier = modifier.height(8.dp))
                         Button(
-                            onClick = { /*TODO*/ },
+                            onClick = { navigateToFormCheck() },
                             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                         ) {
                             Icon(
@@ -208,7 +211,8 @@ fun CheckList(
 fun CheckScreenPreview() {
     StuntCareTheme {
         CheckScreen(
-            navigateToDetailCheck = {}
+            navigateToDetailCheck = {},
+            navigateToFormCheck = {},
         )
     }
 }

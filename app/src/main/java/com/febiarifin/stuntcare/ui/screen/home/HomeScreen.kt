@@ -53,12 +53,16 @@ import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.model.Article
 import com.febiarifin.stuntcare.model.dummyArticle
 import com.febiarifin.stuntcare.model.dummyBanner
+import com.febiarifin.stuntcare.ui.components.BottomSheetProfileLayout
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navigateToFormCheck: () -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -99,7 +103,9 @@ fun HomeScreen() {
             modifier = Modifier
                         .verticalScroll(rememberScrollState())
         ) {
-            BannerHeader()
+            BannerHeader(
+                navigateToFormCheck = navigateToFormCheck
+            )
             Spacer(modifier = Modifier.height(24.dp))
             HomeSection(
                 title = stringResource(R.string.section_banner),
@@ -119,6 +125,7 @@ fun HomeScreen() {
 @Composable
 private fun BannerHeader(
     modifier: Modifier = Modifier,
+    navigateToFormCheck: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -165,7 +172,7 @@ private fun BannerHeader(
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { navigateToFormCheck() },
                     colors =  ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                 ) {
                     Icon(
@@ -239,6 +246,6 @@ fun SectionText(
 @Composable
 fun HomeScreenPreview() {
     StuntCareTheme {
-        HomeScreen()
+        HomeScreen(navigateToFormCheck = {})
     }
 }

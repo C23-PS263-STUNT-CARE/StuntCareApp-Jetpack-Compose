@@ -4,12 +4,14 @@ import CheckItem
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,8 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -28,9 +28,12 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,8 +58,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BottomSheetLayout(
-    check: Check,
+fun BottomSheetProfileLayout(
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -103,88 +106,144 @@ fun BottomSheetLayout(
             Column(
                 modifier = modifier.padding(20.dp, 20.dp, 20.dp, 120.dp)
             ) {
-                StuntingInfo(result = check.result)
                 Spacer(modifier = modifier.height(30.dp))
-                DetailRow(columnName = "Jenis Kelamin", value = check.sex)
-                DetailRow(columnName = "Umur", value = check.age + " Tahun")
-                DetailRow(columnName = "Berat Lahir", value = check.birth_weight + " Kg")
-                DetailRow(columnName = "Tinggi Lahir", value = check.birth_length + " Cm")
-                DetailRow(columnName = "Berat Badan", value = check.body_weight + " Kg")
-                DetailRow(columnName = "Tinggi Badan", value = check.body_length + " Cm")
-                DetailRow(columnName = "ASI Ekslusif", value = check.asi_ekslusif)
+                DetailProfileRow(columnName = "Nama", value = "Febi Arifin", Icons.Default.Person)
+                DetailProfileRow(
+                    columnName = "Email",
+                    value = "febiarifin@email.com",
+                    Icons.Default.Email
+                )
+                Spacer(modifier = modifier.height(30.dp))
+                LogoutButton()
             }
         }
     ) {
         Scaffold {
-            Box {
-                CheckItem(
-                    check,
-                    modifier = Modifier.clickable {
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(shape = CircleShape)
+                    .background(Color.Gray.copy(alpha = 0.2f))
+                    .clickable(onClick = {
                         coroutineScope.launch {
                             if (modalSheetState.isVisible)
                                 modalSheetState.hide()
                             else
                                 modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                         }
-                    }
+                    }),
+                contentAlignment = androidx.compose.ui.Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = null,
+                    tint = Color.Black
                 )
             }
+
+//            Column(
+//                Modifier.fillMaxHeight(),
+//                verticalArrangement = Arrangement.Bottom
+//            ) {
+//                Row{
+//                    Spacer(modifier = modifier.weight(1f))
+//                    Box(
+//                        modifier = Modifier
+//                            .size(40.dp)
+//                            .clip(shape = CircleShape)
+//                            .background(Color.Gray.copy(alpha = 0.2f))
+//                            .clickable(onClick = {
+//                                coroutineScope.launch {
+//                                    if (modalSheetState.isVisible)
+//                                        modalSheetState.hide()
+//                                    else
+//                                        modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+//                                }
+//                            }),
+//                        contentAlignment = androidx.compose.ui.Alignment.Center,
+//                    ) {
+//                        Icon(
+//                            imageVector = Icons.Default.Person,
+//                            contentDescription = null,
+//                            tint = Color.Black
+//                        )
+//                    }
+//                }
+//            }
         }
     }
 }
 
 @Composable
-fun DetailRow(
+fun DetailProfileRow(
     columnName: String,
-    value: String
+    value: String,
+    icon: ImageVector,
 ) {
-    Row {
-        Text(
-            text = columnName,
-            fontSize = 14.sp,
-            modifier = Modifier.width(130.dp)
-        )
-        Text(
-            text = ":",
-            fontSize = 14.sp,
-            modifier = Modifier.width(10.dp)
-        )
-        Text(
-            text = value,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium
-        )
+    Card(
+        modifier = Modifier
+            .clip(shape = RoundedCornerShape(8.dp))
+            .fillMaxWidth()
+            .padding(10.dp, 0.dp, 10.dp, 0.dp)
+            .border(
+                1.dp,
+                shape = RoundedCornerShape(8.dp),
+                color = Color.Gray.copy(alpha = 0.3f)
+            ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
+    ) {
+        Row(
+            modifier = Modifier.padding(20.dp)
+        ) {
+            Icon(icon, contentDescription = null)
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(
+                text = columnName,
+                fontSize = 18.sp,
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = value,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
 
 @Composable
-fun StuntingInfo(
-    result: Double
-) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
+fun LogoutButton() {
+    Card(
+        modifier = Modifier
+            .clickable {
+
+            }
+            .clip(shape = RoundedCornerShape(8.dp))
+            .fillMaxWidth()
+            .padding(10.dp, 0.dp, 10.dp, 0.dp)
+            .border(
+                1.dp,
+                shape = RoundedCornerShape(8.dp),
+                color = Color.Gray.copy(alpha = 0.3f)
+            ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Red,
+        ),
     ) {
-        Box(
-            modifier = Modifier
-                .height(50.dp)
-                .width(200.dp)
-                .clip(shape = RoundedCornerShape(8.dp))
-                .background(
-                    if (result >= 1) Color.Red.copy(alpha = 0.5f) else Color.Green.copy(
-                        alpha = 0.5f
-                    )
-                )
-                .clickable(onClick = {}),
-            contentAlignment = Alignment.Center
+        Row(
+            modifier = Modifier.padding(100.dp, 20.dp, 100.dp, 20.dp)
         ) {
             Text(
-                text = if (result >= 1) "Resiko Stunting" else "Aman Dari Stunting",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
+                text = "Logout",
+                fontSize = 18.sp,
                 color = Color.White,
+                fontWeight = FontWeight.Bold
             )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(Icons.Default.ExitToApp, contentDescription = null, tint = Color.White)
         }
     }
 }
@@ -193,8 +252,6 @@ fun StuntingInfo(
 @Composable
 fun BottomSheetLayoutPreview() {
     StuntCareTheme {
-        BottomSheetLayout(
-            Check(1, "Anak 1", "Laki-laki", "2", "1.5", "40", "4", "80", "Ya", 1.0),
-        )
+        BottomSheetProfileLayout()
     }
 }
