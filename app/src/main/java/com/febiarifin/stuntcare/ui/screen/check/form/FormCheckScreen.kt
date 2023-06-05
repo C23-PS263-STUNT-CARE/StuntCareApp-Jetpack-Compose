@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -65,6 +66,7 @@ fun FormCheckScreen(
     navigateToBack: () -> Unit,
 ) {
     var selectedGender by remember { mutableStateOf("") }
+    var selectedASI by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -97,11 +99,11 @@ fun FormCheckScreen(
         ) {
             Spacer(modifier = modifier.height(80.dp))
             TextFieldWithValidation("Nama Anak", true)
-            TextFieldWithValidation("Umur Anak", false)
-            TextFieldWithValidation("Berat Lahir", false)
-            TextFieldWithValidation("Tinggi Lahir", false)
-            TextFieldWithValidation("Berat Badan", false)
-            TextFieldWithValidation("Tinggi Badan", false)
+            TextFieldWithValidation("Umur Anak (Tahun)", false)
+            TextFieldWithValidation("Berat Lahir (Kg)", false)
+            TextFieldWithValidation("Tinggi Lahir (Cm)", false)
+            TextFieldWithValidation("Berat Badan (Kg)", false)
+            TextFieldWithValidation("Tinggi Badan (Cm)", false)
 
             RadioButton(
                 "Pilih Jenis Kelamin",
@@ -124,13 +126,13 @@ fun FormCheckScreen(
                 {
                     RadioButtonOption(
                         text = "YA",
-                        selected = selectedGender == "Yes",
-                        onSelected = { selectedGender = "Yes" }
+                        selected = selectedASI == "Yes",
+                        onSelected = { selectedASI = "Yes" }
                     )
                     RadioButtonOption(
                         text = "TIDAK",
-                        selected = selectedGender == "No",
-                        onSelected = { selectedGender = "No" }
+                        selected = selectedASI == "No",
+                        onSelected = { selectedASI = "No" }
                     )
                 }
             )
@@ -140,49 +142,12 @@ fun FormCheckScreen(
     }
 }
 
-@Composable
-fun ProgressButton() {
-    var isLoading by remember { mutableStateOf(false) }
-
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = {
-                isLoading = true
-                Handler(Looper.getMainLooper()).postDelayed({
-                    isLoading = false
-                }, 5000)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Check,
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Cek Status Stunting",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        if (isLoading) {
-            Spacer(modifier = Modifier.height(16.dp))
-            CircularProgressIndicator()
-        }
-    }
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextFieldWithValidation(
     label: String,
-    isText: Boolean,
+    isKeyboardTypeText: Boolean,
 ) {
     var text by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
@@ -209,7 +174,7 @@ fun TextFieldWithValidation(
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                keyboardType = if (isText) KeyboardType.Text else KeyboardType.Number
+                keyboardType = if (isKeyboardTypeText) KeyboardType.Text else KeyboardType.Number
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -256,12 +221,50 @@ fun RadioButtonOption(
     ) {
         RadioButton(
             selected = selected,
-            onClick = null // Set to null since we handle onClick in clickable modifier
+            onClick = null
         )
         Text(
             text = text,
             modifier = Modifier.padding(start = 8.dp)
         )
+    }
+}
+
+@Composable
+fun ProgressButton() {
+    var isLoading by remember { mutableStateOf(false) }
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(
+            onClick = {
+                isLoading = true
+                Handler(Looper.getMainLooper()).postDelayed({
+                    isLoading = false
+                }, 5000)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            colors =  ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Cek Status Stunting",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        if (isLoading) {
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator()
+        }
     }
 }
 
