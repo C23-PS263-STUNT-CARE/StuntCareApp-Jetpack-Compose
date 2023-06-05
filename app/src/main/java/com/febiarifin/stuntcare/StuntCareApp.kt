@@ -1,5 +1,4 @@
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -13,7 +12,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
@@ -21,16 +19,23 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.febiarifin.stuntcare.ui.common.BottomBarScreen
-import com.febiarifin.stuntcare.ui.common.BottomNavGraph
+import com.febiarifin.stuntcare.ui.navigation.BottomBarScreen
+import com.febiarifin.stuntcare.ui.navigation.BottomNavGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun StuntCareApp() {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = {
+            if (currentRoute != BottomBarScreen.DetailCheck.route) {
+                BottomBar(navController = navController)
+            }
+        }
     ) {
         BottomNavGraph(navController = navController)
     }
@@ -68,10 +73,10 @@ fun RowScope.AddItem(
 ) {
     NavigationBarItem(
         label = {
-            Text(screen.title)
+            Text(screen.title!!)
         },
         icon = {
-            Icon(imageVector = screen.icon, contentDescription = "Navigation Icon")
+            Icon(imageVector = screen.icon!!, contentDescription = "Navigation Icon")
         },
         selected = currentDestination?.hierarchy?.any {
             it.route == screen.route

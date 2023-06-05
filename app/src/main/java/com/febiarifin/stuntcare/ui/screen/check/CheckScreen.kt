@@ -45,6 +45,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,13 +69,24 @@ import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.model.dummyArticle
 import com.febiarifin.stuntcare.model.dummyCheck
 import com.febiarifin.stuntcare.ui.components.BottomSheetLayout
+import com.febiarifin.stuntcare.ui.screen.check.CheckViewModel
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 import kotlinx.coroutines.launch
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.febiarifin.stuntcare.di.Injection
+import com.febiarifin.stuntcare.ui.common.UiState
+import com.febiarifin.stuntcare.ui.factory.CheckViewModelFactory
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CheckScreen() {
+fun CheckScreen(
+    modifier: Modifier = Modifier,
+    viewModel: CheckViewModel = viewModel(
+        factory = CheckViewModelFactory(Injection.provideCheckRepository())
+    ),
+    navigateToDetailCheck: (Long) -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -91,96 +103,101 @@ fun CheckScreen() {
                     1.dp,
                     color = Color.Gray.copy(alpha = 0.3f)
                 ),
-//              navigationIcon = {
-//                    IconButton(
-//                        onClick = {}
-//                    ) {
-//                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
-//                    }
-//                }
             )
         },
     ) {
-        Column {
-            Column {
-                Spacer(modifier = Modifier.height(60.dp))
-                CheckList(dummyCheck)
+        viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+            when(uiState){
+                is UiState.Loading -> {
+                    viewModel.getAllCheck()
+                }
+                is UiState.Success -> {
+                    CheckList(
+                        uiState.data,
+                        navigateToDetailCheck = navigateToDetailCheck,
+                    )
+                }
+                is UiState.Error -> {}
             }
         }
+
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CheckList(
     listCheck: List<Check>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToDetailCheck: (Long) -> Unit,
 ) {
-    if (listCheck.isEmpty()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
+    Column {
+        Spacer(modifier = Modifier.height(60.dp))
+        if (listCheck.isEmpty()) {
+            Column(
                 modifier = Modifier
-                    .height(210.dp)
-                    .width(300.dp)
-                    .padding(4.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.White)
-                    .border(
-                        1.dp,
-                        shape = RoundedCornerShape(16.dp),
-                        color = Color.Gray.copy(alpha = 0.3f)
-                    ),
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Box(
+                    modifier = Modifier
+                        .height(210.dp)
+                        .width(300.dp)
+                        .padding(4.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.White)
+                        .border(
+                            1.dp,
+                            shape = RoundedCornerShape(16.dp),
+                            color = Color.Gray.copy(alpha = 0.3f)
+                        ),
                 ) {
-                    Image(
-                        modifier = Modifier
-                            .size(90.dp),
-                        painter = painterResource(R.drawable.banner_header),
-                        contentDescription = null
-                    )
-                    Spacer(modifier = modifier.height(8.dp))
-                    Text(
-                        fontSize = 14.sp,
-                        text = stringResource(R.string.jargon_1),
-                        color = Color.Gray
-                    )
-                    Spacer(modifier = modifier.height(8.dp))
-                    Button(
-                        onClick = { /*TODO*/ },
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_add),
+                        Image(
+                            modifier = Modifier
+                                .size(90.dp),
+                            painter = painterResource(R.drawable.banner_header),
                             contentDescription = null
                         )
-                        Spacer(modifier = modifier.width(6.dp))
-                        Text("Cek Status Stunting")
+                        Spacer(modifier = modifier.height(8.dp))
+                        Text(
+                            fontSize = 14.sp,
+                            text = stringResource(R.string.jargon_1),
+                            color = Color.Gray
+                        )
+                        Spacer(modifier = modifier.height(8.dp))
+                        Button(
+                            onClick = { /*TODO*/ },
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_add),
+                                contentDescription = null
+                            )
+                            Spacer(modifier = modifier.width(6.dp))
+                            Text("Cek Status Stunting")
+                        }
                     }
                 }
             }
-        }
-    } else {
-        LazyColumn(
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = modifier.padding(0.dp, 0.dp, 0.dp, 80.dp)
-        ) {
-            items(listCheck, key = { it.id }) { check ->
-                CheckItem(
-                    check,
-                    modifier = Modifier.clickable {
-
-                    }
-                )
+        } else {
+            LazyColumn(
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = modifier.padding(0.dp, 0.dp, 0.dp, 80.dp)
+            ) {
+                items(listCheck, key = { it.id }) { check ->
+                    CheckItem(
+                        check,
+                        modifier = Modifier.clickable {
+                            navigateToDetailCheck(check.id)
+                        }
+                    )
+                }
             }
         }
     }
@@ -190,6 +207,8 @@ fun CheckList(
 @Composable
 fun CheckScreenPreview() {
     StuntCareTheme {
-        CheckScreen()
+        CheckScreen(
+            navigateToDetailCheck = {}
+        )
     }
 }

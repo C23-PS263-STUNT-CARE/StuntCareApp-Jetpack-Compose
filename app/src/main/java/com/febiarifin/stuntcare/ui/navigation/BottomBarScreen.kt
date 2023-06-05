@@ -1,4 +1,4 @@
-package com.febiarifin.stuntcare.ui.common
+package com.febiarifin.stuntcare.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomBarScreen(
     val route: String,
-    val title: String,
-    val icon: ImageVector
+    val title: String? = null,
+    val icon: ImageVector ? = null,
 ){
     object Home: BottomBarScreen(
         route = "home",
@@ -35,4 +35,8 @@ sealed class BottomBarScreen(
         title = "Profile",
         icon = Icons.Default.Person
     )
+
+    object DetailCheck: BottomBarScreen("check/{checkId}"){
+        fun createRoute(checkId: Long) = "check/$checkId"
+    }
 }
