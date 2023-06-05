@@ -43,4 +43,12 @@ sealed class BottomBarScreen(
     object FormCheck: BottomBarScreen("formcheck"){
         fun createRoute() = "formcheck"
     }
+
+    object Login: BottomBarScreen("login"){
+        fun createRoute() = "login"
+    }
+
+    object Register: BottomBarScreen("register"){
+        fun createRoute() = "register"
+    }
 }

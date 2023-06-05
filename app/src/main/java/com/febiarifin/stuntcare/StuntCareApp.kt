@@ -1,4 +1,6 @@
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -11,7 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
@@ -21,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.febiarifin.stuntcare.ui.navigation.BottomBarScreen
 import com.febiarifin.stuntcare.ui.navigation.BottomNavGraph
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -29,11 +36,18 @@ fun StuntCareApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    var showContent by remember { mutableStateOf(false) }
 
     Scaffold(
         bottomBar = {
-            if (currentRoute != BottomBarScreen.DetailCheck.route && currentRoute != BottomBarScreen.FormCheck.route) {
-                BottomBar(navController = navController)
+            if (currentRoute != BottomBarScreen.Login.route && currentRoute != BottomBarScreen.FormCheck.route && currentRoute != BottomBarScreen.DetailCheck.route) {
+                LaunchedEffect(Unit) {
+                    delay(500)
+                    showContent = true
+                }
+                if (showContent) {
+                    BottomBar(navController = navController)
+                }
             }
         }
     ) {
@@ -45,14 +59,15 @@ fun StuntCareApp() {
 fun BottomBar(
     navController: NavHostController
 ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.Check,
         BottomBarScreen.Education,
         BottomBarScreen.Profile
     )
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
 
     NavigationBar {
         screens.forEach { screen ->
@@ -87,7 +102,9 @@ fun RowScope.AddItem(
         colors = androidx.compose.material3.NavigationBarItemDefaults
             .colors(
                 selectedIconColor = MaterialTheme.colorScheme.secondary,
-                indicatorColor = MaterialTheme.colorScheme.surfaceColorAtElevation(LocalAbsoluteTonalElevation.current),
+                indicatorColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                    LocalAbsoluteTonalElevation.current
+                ),
                 selectedTextColor = MaterialTheme.colorScheme.secondary,
             )
     )
