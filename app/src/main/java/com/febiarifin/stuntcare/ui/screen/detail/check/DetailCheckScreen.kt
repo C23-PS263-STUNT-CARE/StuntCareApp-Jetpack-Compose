@@ -92,7 +92,7 @@ fun DetailCheckScreen(
                         Spacer(modifier = Modifier.height(80.dp))
                         DetailCheckRowItem(columnName = "Nama Anak", value = data.name)
                         DetailCheckRowItem(columnName = "Jenis Kelamin", value = data.sex)
-                        DetailCheckRowItem(columnName = "Umur", value = data.age + " Tahun")
+                        DetailCheckRowItem(columnName = "Umur", value = data.age + " Bulan")
                         DetailCheckRowItem(
                             columnName = "Berat Lahir",
                             value = data.birth_weight + " Kg"

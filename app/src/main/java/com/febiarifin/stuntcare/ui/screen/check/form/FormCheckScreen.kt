@@ -3,6 +3,7 @@ package com.febiarifin.stuntcare.ui.screen.check.form
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -46,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -99,7 +101,7 @@ fun FormCheckScreen(
         ) {
             Spacer(modifier = modifier.height(80.dp))
             TextFieldWithValidation("Nama Anak", true)
-            TextFieldWithValidation("Umur Anak (Tahun)", false)
+            TextFieldWithValidation("Umur Anak (Bulan)", false)
             TextFieldWithValidation("Berat Lahir (Kg)", false)
             TextFieldWithValidation("Tinggi Lahir (Cm)", false)
             TextFieldWithValidation("Berat Badan (Kg)", false)
@@ -233,7 +235,7 @@ fun RadioButtonOption(
 @Composable
 fun ProgressButton() {
     var isLoading by remember { mutableStateOf(false) }
-
+    val content = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
