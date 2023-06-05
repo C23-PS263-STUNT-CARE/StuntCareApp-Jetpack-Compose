@@ -1,6 +1,6 @@
-package com.febiarifin.stuntcare.ui.screen.auth.login
+package com.febiarifin.stuntcare.ui.screen.auth.register
 
-import StuntCareLightTheme
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,16 +29,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun LoginScreen(
+fun RegisterScreen(
     modifier: Modifier = Modifier,
-    navigateToRegister: () -> Unit
+    navigateToLogin: () -> Unit,
 ) {
-    var passwordVisibility by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordConfirmation by remember { mutableStateOf("") }
+    var passwordVisibility by remember { mutableStateOf(false) }
+    var passwordConfirmationVisibility by remember { mutableStateOf(false) }
     val colorPrimary: Color = Color(0xFF3984E9)
     var showErrorEmail by remember { mutableStateOf(false) }
     var showErrorEmpty by remember { mutableStateOf(false) }
+    var showErrorPasswordConfirmation by remember { mutableStateOf(false) }
+    var showErrorPassword by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -56,7 +60,7 @@ fun LoginScreen(
             fontWeight = FontWeight.Black
         )
         Text(
-            text = "Yuk Login dan Akses Semua Fiturnya",
+            text = "Yuk Daftar dan Akses Semua Fiturnya",
             color = Color.Gray,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium
@@ -65,24 +69,21 @@ fun LoginScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email", fontSize = 16.sp) },
-            singleLine = true,
+            label = { Text("Email") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = colorPrimary,
                 focusedLabelColor = colorPrimary,
                 cursorColor = colorPrimary,
             ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email
-            )
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password", fontSize = 16.sp) },
-            singleLine = true,
+            label = { Text("Password") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -100,16 +101,57 @@ fun LoginScreen(
             ),
         )
         Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = passwordConfirmation,
+            onValueChange = { passwordConfirmation = it },
+            label = { Text("Konfirmasi Password") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (passwordConfirmationVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                IconButton(onClick = { passwordConfirmationVisibility = !passwordConfirmationVisibility }) {
+                    Icon(
+                        imageVector = if (passwordConfirmationVisibility) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = if (passwordConfirmationVisibility) "Hide Password" else "Show Password"
+                    )
+                }
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorPrimary,
+                focusedLabelColor = colorPrimary,
+                cursorColor = colorPrimary,
+            ),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
                 val isEmailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                if (email.isNotEmpty() && isEmailValid && password.isNotEmpty()) {
-                    showErrorEmail = false
+                val isPasswordValid = password.length >= 6
+                if (email.isNotEmpty() && password.isNotEmpty() && password == passwordConfirmation && isEmailValid && isPasswordValid) {
                     showErrorEmpty = false
-                } else if (email.isEmpty() || password.isEmpty()) {
+                    showErrorEmail = false
+                    showErrorPasswordConfirmation = false
+                    showErrorPassword = false
+                } else if(email.isEmpty() || password.isEmpty() || passwordConfirmation.isEmpty()){
+                    showErrorEmail = false
+                    showErrorPasswordConfirmation = false
+                    showErrorPassword = false
                     showErrorEmpty = true
-                } else if (!isEmailValid) {
-                    showErrorEmail = true
+                }else if(!isEmailValid){
+                    showErrorEmpty = false
+                    showErrorPasswordConfirmation = false
+                    showErrorPassword = false
+                    showErrorEmail= true
+                }else if(password != passwordConfirmation){
+                    showErrorEmpty = false
+                    showErrorEmail = false
+                    showErrorPassword = false
+                    showErrorPasswordConfirmation = true
+                }else if(!isPasswordValid){
+                    showErrorEmpty = false
+                    showErrorEmail = false
+                    showErrorPasswordConfirmation = false
+                    showErrorPassword = true
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -117,7 +159,7 @@ fun LoginScreen(
             shape = MaterialTheme.shapes.medium
         ) {
             Text(
-                text = "Login",
+                text = "Daftar",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -126,14 +168,14 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = buildAnnotatedString {
-                append("Belum punya akun? ")
+                append("Sudah punya akun? ")
                 withStyle(style = SpanStyle(color = colorPrimary)) {
-                    append("Daftar")
+                    append("Login")
                 }
             },
             modifier = Modifier.clickable(
                 onClick = {
-                    navigateToRegister()
+                    navigateToLogin()
                 }
             )
         )
@@ -156,17 +198,23 @@ fun LoginScreen(
                     contentDescription = "Akun Google",
                     modifier = Modifier.padding(end = 8.dp)
                 )
-                Text("Login dengan Akun Google")
+                Text("Daftar dengan Akun Google")
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        if (showErrorEmail) {
+
+        if (showErrorEmpty){
+            ShowSnackBar(message = "Pastikan Semua Field Tidak Boleh Kosong")
+        }else if(showErrorEmail){
             ShowSnackBar(message = "Pastikan Input Email dengan Benar")
-        }else if(showErrorEmpty){
-            ShowSnackBar(message = "Email dan Password Tidak Boleh Kosong")
+        }else if(showErrorPasswordConfirmation){
+            ShowSnackBar(message = "Pastikan Input Password Konfirmasi dengan Benar")
+        }else if(showErrorPassword){
+            ShowSnackBar(message = "Pastikan Password Lebih dari 6 Karakter")
         }
     }
 }
+
 
 @Composable
 fun ShowSnackBar(
@@ -187,10 +235,9 @@ fun ShowSnackBar(
 
 @Preview
 @Composable
-fun LoginScreenPreview() {
-    StuntCareLightTheme {
-        LoginScreen(
-            navigateToRegister = {}
-        )
-    }
+fun RegisterScreenPreview() {
+    RegisterScreen(
+        navigateToLogin = {}
+    )
 }
+
