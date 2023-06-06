@@ -138,7 +138,7 @@ fun CheckList(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(0.dp, 0.dp, 0.dp,80.dp),
+                    .padding(bottom = 80.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -191,7 +191,7 @@ fun CheckList(
             LazyColumn(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = modifier.padding(0.dp, 0.dp, 0.dp, 80.dp)
+                modifier = modifier.padding(bottom = 80.dp)
             ) {
                 items(listCheck, key = { it.id }) { check ->
                     CheckItem(

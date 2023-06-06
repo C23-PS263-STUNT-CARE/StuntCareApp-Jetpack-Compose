@@ -13,6 +13,7 @@ import androidx.navigation.navArgument
 import com.febiarifin.stuntcare.ui.screen.auth.login.LoginScreen
 import com.febiarifin.stuntcare.ui.screen.auth.register.RegisterScreen
 import com.febiarifin.stuntcare.ui.screen.check.form.FormCheckScreen
+import com.febiarifin.stuntcare.ui.screen.detail.article.DetailArticleScreen
 import com.febiarifin.stuntcare.ui.screen.detail.check.DetailCheckScreen
 
 @Composable
@@ -59,7 +60,11 @@ fun BottomNavGraph(navController: NavHostController) {
             )
         }
         composable(route = BottomBarScreen.Education.route) {
-            EducationScreen()
+            EducationScreen(
+                navigateToDetailArticle = { articleId ->
+                    navController.navigate(BottomBarScreen.DetailArticle.createRoute(articleId))
+                }
+            )
         }
         composable(route = BottomBarScreen.Profile.route) {
             ProfileScreen()
@@ -77,6 +82,16 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = BottomBarScreen.FormCheck.route) {
             FormCheckScreen(
                 navigateToBack = { navController.navigateUp() }
+            )
+        }
+        composable(
+            route = BottomBarScreen.DetailArticle.route,
+            arguments = listOf(navArgument("articleId"){ type = NavType.LongType }),
+        ){
+            val id = it.arguments?.getLong("articleId") ?: -1L
+            DetailArticleScreen(
+                articleId = id,
+                navigateToBack = { navController.navigateUp()}
             )
         }
     }

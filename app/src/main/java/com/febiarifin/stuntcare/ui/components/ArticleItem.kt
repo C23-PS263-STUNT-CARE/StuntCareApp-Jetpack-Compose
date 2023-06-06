@@ -110,7 +110,9 @@ fun ArticleItemPreview() {
                 R.drawable.article_image_1,
                 "Lorem ipsum dolor sit amet conse ctetur adipiscing elit",
                 "Lorem",
-                "29 Mei 2023"
+                "29 Mei 2023",
+                "Lorem ipsum dolor sit amet conse ctetur adipiscing elit",
+                "Admin"
             ),
             200.dp,
             120.dp,

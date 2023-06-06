@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.febiarifin.stuntcare.di.Injection
+import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.ui.common.UiState
 import com.febiarifin.stuntcare.ui.factory.CheckViewModelFactory
 
@@ -82,41 +83,45 @@ fun DetailCheckScreen(
                 is UiState.Loading -> {
                     viewModel.getCheckById(checkId)
                 }
-
                 is UiState.Success -> {
-                    val data = uiState.data
-                    Column(
-                        modifier = Modifier
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Spacer(modifier = Modifier.height(80.dp))
-                        DetailCheckRowItem(columnName = "Nama Anak", value = data.name)
-                        DetailCheckRowItem(columnName = "Jenis Kelamin", value = data.sex)
-                        DetailCheckRowItem(columnName = "Umur", value = data.age + " Bulan")
-                        DetailCheckRowItem(
-                            columnName = "Berat Lahir",
-                            value = data.birth_weight + " Kg"
-                        )
-                        DetailCheckRowItem(
-                            columnName = "Tinggi Lahir",
-                            value = data.birth_length + " Cm"
-                        )
-                        DetailCheckRowItem(
-                            columnName = "Berat Badan",
-                            value = data.body_weight + " Kg"
-                        )
-                        DetailCheckRowItem(
-                            columnName = "Tinggi Badan",
-                            value = data.body_length + " Cm"
-                        )
-                        DetailCheckRowItem(columnName = "ASI Ekslusif", value = data.asi_ekslusif)
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
+                    DetailCheckContent(check = uiState.data)
                 }
-
                 is UiState.Error -> {}
             }
         }
+    }
+}
+
+@Composable
+fun DetailCheckContent(
+    check: Check,
+) {
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(modifier = Modifier.height(80.dp))
+        DetailCheckRowItem(columnName = "Nama Anak", value = check.name)
+        DetailCheckRowItem(columnName = "Jenis Kelamin", value = check.sex)
+        DetailCheckRowItem(columnName = "Umur", value = check.age + " Bulan")
+        DetailCheckRowItem(
+            columnName = "Berat Lahir",
+            value = check.birth_weight + " Kg"
+        )
+        DetailCheckRowItem(
+            columnName = "Tinggi Lahir",
+            value = check.birth_length + " Cm"
+        )
+        DetailCheckRowItem(
+            columnName = "Berat Badan",
+            value = check.body_weight + " Kg"
+        )
+        DetailCheckRowItem(
+            columnName = "Tinggi Badan",
+            value = check.body_length + " Cm"
+        )
+        DetailCheckRowItem(columnName = "ASI Ekslusif", value = check.asi_ekslusif)
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
