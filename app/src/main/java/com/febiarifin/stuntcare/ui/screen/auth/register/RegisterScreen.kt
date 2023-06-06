@@ -27,6 +27,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.febiarifin.stuntcare.ui.components.ShowSnackBar
 
 @Composable
 fun RegisterScreen(
@@ -43,6 +44,7 @@ fun RegisterScreen(
     var showErrorEmpty by remember { mutableStateOf(false) }
     var showErrorPasswordConfirmation by remember { mutableStateOf(false) }
     var showErrorPassword by remember { mutableStateOf(false) }
+    var isRegisterFormComplete by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -132,26 +134,31 @@ fun RegisterScreen(
                     showErrorEmail = false
                     showErrorPasswordConfirmation = false
                     showErrorPassword = false
+                    isRegisterFormComplete = true
                 } else if(email.isEmpty() || password.isEmpty() || passwordConfirmation.isEmpty()){
                     showErrorEmail = false
                     showErrorPasswordConfirmation = false
                     showErrorPassword = false
                     showErrorEmpty = true
+                    isRegisterFormComplete = false
                 }else if(!isEmailValid){
                     showErrorEmpty = false
                     showErrorPasswordConfirmation = false
                     showErrorPassword = false
                     showErrorEmail= true
+                    isRegisterFormComplete = false
                 }else if(password != passwordConfirmation){
                     showErrorEmpty = false
                     showErrorEmail = false
                     showErrorPassword = false
                     showErrorPasswordConfirmation = true
+                    isRegisterFormComplete = false
                 }else if(!isPasswordValid){
                     showErrorEmpty = false
                     showErrorEmail = false
                     showErrorPasswordConfirmation = false
                     showErrorPassword = true
+                    isRegisterFormComplete = false
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -211,25 +218,9 @@ fun RegisterScreen(
             ShowSnackBar(message = "Pastikan Input Password Konfirmasi dengan Benar")
         }else if(showErrorPassword){
             ShowSnackBar(message = "Pastikan Password Lebih dari 6 Karakter")
+        }else if(isRegisterFormComplete){
+            ShowSnackBar(message = "Email : " + email + " | Password : " + password + " | Password Confirmation : " + passwordConfirmation)
         }
-    }
-}
-
-
-@Composable
-fun ShowSnackBar(
-    message: String,
-) {
-    Snackbar(
-        modifier = Modifier
-            .fillMaxWidth(),
-        backgroundColor = Color.Black,
-        contentColor = Color.White,
-    ) {
-        Text(
-            text = message,
-            textAlign = TextAlign.Center
-        )
     }
 }
 

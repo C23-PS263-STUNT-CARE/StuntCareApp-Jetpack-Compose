@@ -27,6 +27,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.febiarifin.stuntcare.ui.components.ShowSnackBar
 
 @Composable
 fun LoginScreen(
@@ -39,6 +40,7 @@ fun LoginScreen(
     val colorPrimary: Color = Color(0xFF3984E9)
     var showErrorEmail by remember { mutableStateOf(false) }
     var showErrorEmpty by remember { mutableStateOf(false) }
+    var isLoginFormComplete by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -106,10 +108,14 @@ fun LoginScreen(
                 if (email.isNotEmpty() && isEmailValid && password.isNotEmpty()) {
                     showErrorEmail = false
                     showErrorEmpty = false
+                    isLoginFormComplete = false
+                    isLoginFormComplete = true
                 } else if (email.isEmpty() || password.isEmpty()) {
                     showErrorEmpty = true
+                    isLoginFormComplete = false
                 } else if (!isEmailValid) {
                     showErrorEmail = true
+                    isLoginFormComplete = false
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -164,24 +170,9 @@ fun LoginScreen(
             ShowSnackBar(message = "Pastikan Input Email dengan Benar")
         }else if(showErrorEmpty){
             ShowSnackBar(message = "Email dan Password Tidak Boleh Kosong")
+        }else if(isLoginFormComplete){
+            ShowSnackBar(message = "Email : "+email+" | Password : "+password)
         }
-    }
-}
-
-@Composable
-fun ShowSnackBar(
-    message: String,
-) {
-    Snackbar(
-        modifier = Modifier
-            .fillMaxWidth(),
-        backgroundColor = Color.Black,
-        contentColor = Color.White,
-    ) {
-        Text(
-            text = message,
-            textAlign = TextAlign.Center
-        )
     }
 }
 

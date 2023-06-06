@@ -17,19 +17,27 @@ import com.febiarifin.stuntcare.ui.screen.detail.check.DetailCheckScreen
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
-    val state = false
+    val state = true
     NavHost(navController = navController, startDestination = if (state) BottomBarScreen.Home.route else BottomBarScreen.Login.route) {
         composable(route = BottomBarScreen.Login.route){
             LoginScreen(
                 navigateToRegister = {
-                    navController.navigate(BottomBarScreen.Register.createRoute())
+                    navController.navigate(BottomBarScreen.Register.createRoute()){
+                        popUpTo(navController.graph.id){
+                            inclusive = false
+                        }
+                    }
                 }
             )
         }
         composable(route = BottomBarScreen.Register.route){
             RegisterScreen(
                 navigateToLogin = {
-                    navController.navigate(BottomBarScreen.Login.createRoute())
+                    navController.navigate(BottomBarScreen.Login.createRoute()){
+                        popUpTo(navController.graph.id){
+                            inclusive = false
+                        }
+                    }
                 }
             )
         }

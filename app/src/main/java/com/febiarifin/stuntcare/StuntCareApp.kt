@@ -1,6 +1,8 @@
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,12 +21,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.febiarifin.stuntcare.ui.common.BackPress
 import com.febiarifin.stuntcare.ui.navigation.BottomBarScreen
 import com.febiarifin.stuntcare.ui.navigation.BottomNavGraph
 import kotlinx.coroutines.delay
@@ -52,6 +56,31 @@ fun StuntCareApp() {
         }
     ) {
         BottomNavGraph(navController = navController)
+    }
+
+    var showToast by remember { mutableStateOf(false) }
+    var backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
+    val context = LocalContext.current
+
+    if(showToast){
+        Toast.makeText(context, "Tekan sekali lagi untuk keluar", Toast.LENGTH_SHORT).show()
+        showToast= false
+    }
+
+    LaunchedEffect(key1 = backPressState) {
+        if (backPressState == BackPress.InitialTouch) {
+            delay(2000)
+            backPressState = BackPress.Idle
+        }
+    }
+
+    BackHandler(backPressState == BackPress.Idle) {
+        if (currentRoute == BottomBarScreen.Home.route) {
+            backPressState = BackPress.InitialTouch
+            showToast = true
+        }else {
+            navController.popBackStack()
+        }
     }
 }
 

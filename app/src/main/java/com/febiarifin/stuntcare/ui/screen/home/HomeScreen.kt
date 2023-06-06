@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.model.Article
 import com.febiarifin.stuntcare.model.dummyArticle
