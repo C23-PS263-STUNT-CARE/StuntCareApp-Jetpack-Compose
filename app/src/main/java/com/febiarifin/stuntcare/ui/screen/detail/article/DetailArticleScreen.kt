@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,14 +41,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.febiarifin.stuntcare.ui.components.LoadGlideImage
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.di.Injection
 import com.febiarifin.stuntcare.model.Article
 import com.febiarifin.stuntcare.ui.common.UiState
-import com.febiarifin.stuntcare.ui.factory.ArticleViewModelFactory
+import com.febiarifin.stuntcare.ui.factory.ViewModelFactory
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,9 +54,7 @@ import com.febiarifin.stuntcare.ui.factory.ArticleViewModelFactory
 fun DetailArticleScreen(
     articleId: Long,
     viewModel: DetailArticleViewModel = viewModel(
-        factory = ArticleViewModelFactory(
-            Injection.provideArticleRepository()
-        )
+        factory = ViewModelFactory(Injection.provideRepository())
     ),
     modifier: Modifier = Modifier,
     navigateToBack: () -> Unit,

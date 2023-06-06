@@ -262,7 +262,7 @@ fun CheckForm() {
         }
         Spacer(modifier = Modifier.height(20.dp))
         if (showError) {
-            ShowSnackBar(message = "Pastiokan Semua Field Terisi")
+            ShowSnackBar(message = "Pastikan Semua Field Terisi")
         } else if(isFormCheckCompleted) {
             ShowSnackBar(message = "Semua Field Terisi " + name)
         }

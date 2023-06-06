@@ -34,7 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.di.Injection
 import com.febiarifin.stuntcare.ui.common.UiState
-import com.febiarifin.stuntcare.ui.factory.ArticleViewModelFactory
+import com.febiarifin.stuntcare.ui.factory.ViewModelFactory
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +42,7 @@ import com.febiarifin.stuntcare.ui.factory.ArticleViewModelFactory
 fun EducationScreen(
     modifier: Modifier = Modifier,
     viewModel: EducationViewModel = viewModel(
-        factory = ArticleViewModelFactory(Injection.provideArticleRepository())
+        factory = ViewModelFactory(Injection.provideRepository())
     ),
     navigateToDetailArticle: (Long) -> Unit
 ) {

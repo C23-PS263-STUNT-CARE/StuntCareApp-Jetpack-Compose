@@ -1,12 +1,33 @@
 package com.febiarifin.stuntcare.data
 
 import com.febiarifin.stuntcare.model.Article
+import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.model.dummyArticle
+import com.febiarifin.stuntcare.model.dummyCheck
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class ArticleRepository {
+class Repository {
+    private val listCheck = mutableListOf<Check>()
     private val listArticle = mutableListOf<Article>()
+
+    init {
+        if (listCheck.isEmpty()) {
+            dummyCheck.forEach { check ->
+                listCheck.add(check)
+            }
+        }
+    }
+
+    fun getAllCheck(): Flow<List<Check>> {
+        return flowOf(listCheck)
+    }
+
+    fun getCheckById(checkId: Long): Check {
+        return listCheck.first{
+            it.id == checkId
+        }
+    }
 
     init {
         if (listArticle.isEmpty()) {
@@ -28,11 +49,11 @@ class ArticleRepository {
 
     companion object{
         @Volatile
-        private var instance: ArticleRepository ?= null
+        private var instance: Repository ?= null
 
-        fun getInstance(): ArticleRepository =
+        fun getInstance(): Repository =
             instance ?: synchronized(this){
-                ArticleRepository().apply {
+                Repository().apply {
                     instance = this
                 }
             }

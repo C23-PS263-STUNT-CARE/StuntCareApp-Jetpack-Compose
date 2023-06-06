@@ -2,7 +2,7 @@ package com.febiarifin.stuntcare.ui.screen.check
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.febiarifin.stuntcare.data.CheckRepository
+import com.febiarifin.stuntcare.data.Repository
 import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.ui.common.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class CheckViewModel(
-    private val repository: CheckRepository,
+    private val repository: Repository,
 ): ViewModel() {
     private val _uiState: MutableStateFlow<UiState<List<Check>>> =
         MutableStateFlow(UiState.Loading)

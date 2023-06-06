@@ -2,7 +2,7 @@ package com.febiarifin.stuntcare.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -15,7 +15,7 @@ sealed class BottomBarScreen(
     object Home: BottomBarScreen(
         route = "home",
         title = "Home",
-        icon = Icons.Default.Home
+        icon = Icons.Filled.Dashboard
     )
 
     object Check: BottomBarScreen(
