@@ -1,5 +1,7 @@
 package com.febiarifin.stuntcare.ui.screen.auth.register
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -16,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -27,13 +30,23 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.febiarifin.stuntcare.api.ApiConfig
+import com.febiarifin.stuntcare.model.request.RegisterRequest
+import com.febiarifin.stuntcare.model.response.RegisterResponse
+import com.febiarifin.stuntcare.ui.components.ShowProgressBar
 import com.febiarifin.stuntcare.ui.components.ShowSnackBar
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+private lateinit var apiConfig: ApiConfig
 
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
     navigateToLogin: () -> Unit,
 ) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordConfirmation by remember { mutableStateOf("") }
@@ -45,6 +58,9 @@ fun RegisterScreen(
     var showErrorPasswordConfirmation by remember { mutableStateOf(false) }
     var showErrorPassword by remember { mutableStateOf(false) }
     var isRegisterFormComplete by remember { mutableStateOf(false) }
+    var showProgressBar by remember { mutableStateOf(false) }
+    var isRegisterFailed by remember { mutableStateOf(false) }
+    var messageError by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -68,6 +84,19 @@ fun RegisterScreen(
             fontWeight = FontWeight.Medium
         )
         Spacer(modifier = Modifier.height(30.dp))
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Nama Lengkap") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorPrimary,
+                focusedLabelColor = colorPrimary,
+                cursorColor = colorPrimary,
+            ),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -111,7 +140,9 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (passwordConfirmationVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                IconButton(onClick = { passwordConfirmationVisibility = !passwordConfirmationVisibility }) {
+                IconButton(onClick = {
+                    passwordConfirmationVisibility = !passwordConfirmationVisibility
+                }) {
                     Icon(
                         imageVector = if (passwordConfirmationVisibility) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                         contentDescription = if (passwordConfirmationVisibility) "Hide Password" else "Show Password"
@@ -129,31 +160,31 @@ fun RegisterScreen(
             onClick = {
                 val isEmailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
                 val isPasswordValid = password.length >= 8
-                if (email.isNotEmpty() && password.isNotEmpty() && password == passwordConfirmation && isEmailValid && isPasswordValid) {
+                if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && password == passwordConfirmation && isEmailValid && isPasswordValid) {
                     showErrorEmpty = false
                     showErrorEmail = false
                     showErrorPasswordConfirmation = false
                     showErrorPassword = false
                     isRegisterFormComplete = true
-                } else if(email.isEmpty() || password.isEmpty() || passwordConfirmation.isEmpty()){
+                } else if (name.isEmpty() && email.isEmpty() || password.isEmpty() || passwordConfirmation.isEmpty()) {
                     showErrorEmail = false
                     showErrorPasswordConfirmation = false
                     showErrorPassword = false
                     showErrorEmpty = true
                     isRegisterFormComplete = false
-                }else if(!isEmailValid){
+                } else if (!isEmailValid) {
                     showErrorEmpty = false
                     showErrorPasswordConfirmation = false
                     showErrorPassword = false
-                    showErrorEmail= true
+                    showErrorEmail = true
                     isRegisterFormComplete = false
-                }else if(password != passwordConfirmation){
+                } else if (password != passwordConfirmation) {
                     showErrorEmpty = false
                     showErrorEmail = false
                     showErrorPassword = false
                     showErrorPasswordConfirmation = true
                     isRegisterFormComplete = false
-                }else if(!isPasswordValid){
+                } else if (!isPasswordValid) {
                     showErrorEmpty = false
                     showErrorEmail = false
                     showErrorPasswordConfirmation = false
@@ -208,19 +239,51 @@ fun RegisterScreen(
                 Text("Daftar dengan Akun Google")
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        if (showErrorEmpty){
+        if (showErrorEmpty) {
             ShowSnackBar(message = "Pastikan Semua Field Tidak Boleh Kosong")
-        }else if(showErrorEmail){
+        } else if (showErrorEmail) {
             ShowSnackBar(message = "Pastikan Input Email dengan Benar")
-        }else if(showErrorPasswordConfirmation){
+        } else if (showErrorPasswordConfirmation) {
             ShowSnackBar(message = "Pastikan Input Password Konfirmasi dengan Benar")
-        }else if(showErrorPassword){
+        } else if (showErrorPassword) {
             ShowSnackBar(message = "Pastikan Password Lebih dari 8 Karakter")
-        }else if(isRegisterFormComplete){
-            ShowSnackBar(message = "Email : " + email + " | Password : " + password + " | Password Confirmation : " + passwordConfirmation)
+        } else if (isRegisterFormComplete) {
+            val context = LocalContext.current
+            showProgressBar = true
+            isRegisterFailed = false
+            apiConfig = ApiConfig()
+            apiConfig.getApiService()
+                .register(RegisterRequest(name, email, password, passwordConfirmation))
+                .enqueue(object : Callback<RegisterResponse> {
+                    override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {}
+                    override fun onResponse(
+                        call: Call<RegisterResponse>,
+                        response: Response<RegisterResponse>
+                    ) {
+                        isRegisterFormComplete = false
+                        showProgressBar = false
+                        if (response.isSuccessful) {
+                            Log.d("TEST", response.body()?.message.toString())
+                            Toast.makeText(
+                                context,
+                                "Pendafataran berhasil. Silahkan login.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            navigateToLogin()
+                        } else {
+                            isRegisterFailed = true
+                            messageError = "Email Sudah Terdaftar"
+                        }
+                    }
+                })
         }
+        if (isRegisterFailed) {
+            val context = LocalContext.current
+            Toast.makeText(context, "Email sudah digunakan. Silahkan gunakan email lainnya", Toast.LENGTH_SHORT).show()
+        }
+        ShowProgressBar(showProgressBar)
     }
 }
 

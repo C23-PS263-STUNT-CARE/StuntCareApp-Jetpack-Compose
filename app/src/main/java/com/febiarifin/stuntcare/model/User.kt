@@ -1,8 +1,8 @@
 package com.febiarifin.stuntcare.model
 
 data class User (
-    val id: String,
-    val name: String,
-    val email: String,
-    val token: String
+    var id: String? = null,
+    var name: String? = null,
+    var email: String? = null,
+    var token: String? = null,
 )

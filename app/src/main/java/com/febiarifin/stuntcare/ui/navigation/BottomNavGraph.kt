@@ -5,6 +5,7 @@ import EducationScreen
 import HomeScreen
 import ProfileScreen
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -16,15 +17,25 @@ import com.febiarifin.stuntcare.ui.screen.auth.register.RegisterScreen
 import com.febiarifin.stuntcare.ui.screen.check.form.FormCheckScreen
 import com.febiarifin.stuntcare.ui.screen.detail.article.DetailArticleScreen
 import com.febiarifin.stuntcare.ui.screen.detail.check.DetailCheckScreen
+import com.febiarifin.stuntcare.util.UserPreference
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
-    val state = false
-    NavHost(navController = navController, startDestination = if (state) BottomBarScreen.Home.route else BottomBarScreen.Login.route) {
+    val context = LocalContext.current
+    val userPreference = UserPreference(context)
+
+    NavHost(navController = navController, startDestination = if (userPreference.getUserToken() != null) BottomBarScreen.Home.route else BottomBarScreen.Login.route) {
         composable(route = BottomBarScreen.Login.route){
             LoginScreen(
                 navigateToRegister = {
                     navController.navigate(BottomBarScreen.Register.createRoute()){
+                        popUpTo(navController.graph.id){
+                            inclusive = false
+                        }
+                    }
+                },
+                navigateToHomeScreen = {
+                    navController.navigate(BottomBarScreen.Home.route){
                         popUpTo(navController.graph.id){
                             inclusive = false
                         }

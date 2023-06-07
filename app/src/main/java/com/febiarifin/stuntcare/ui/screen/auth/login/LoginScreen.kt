@@ -2,6 +2,7 @@ package com.febiarifin.stuntcare.ui.screen.auth.login
 
 import StuntCareLightTheme
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -28,9 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.febiarifin.stuntcare.api.ApiConfig
+import com.febiarifin.stuntcare.model.User
 import com.febiarifin.stuntcare.model.request.LoginRequest
 import com.febiarifin.stuntcare.model.response.LoginResponse
+import com.febiarifin.stuntcare.ui.components.ShowProgressBar
 import com.febiarifin.stuntcare.ui.components.ShowSnackBar
+import com.febiarifin.stuntcare.util.UserPreference
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,6 +47,7 @@ private val colorPrimary: Color = Color(0xFF3984E9)
 fun LoginScreen(
     modifier: Modifier = Modifier,
     navigateToRegister: () -> Unit,
+    navigateToHomeScreen : () -> Unit,
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
@@ -51,6 +57,10 @@ fun LoginScreen(
     var isLoginFormComplete by remember { mutableStateOf(false) }
     var showProgressBar by remember { mutableStateOf(false) }
     var isLoginFailed by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val userPreference = UserPreference(context)
+    val user = User()
 
     Column(
         modifier = Modifier
@@ -110,6 +120,9 @@ fun LoginScreen(
                 focusedLabelColor = colorPrimary,
                 cursorColor = colorPrimary,
             ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            )
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
@@ -183,45 +196,40 @@ fun LoginScreen(
             ShowSnackBar(message = "Email dan Password Tidak Boleh Kosong")
         } else if (isLoginFormComplete) {
             showProgressBar = true
+            isLoginFailed = false
             apiConfig = ApiConfig()
-            apiConfig.getApiService().loginUser(LoginRequest(email, password))
+            apiConfig.getApiService().login(LoginRequest(email, password))
                 .enqueue(object : Callback<LoginResponse> {
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                         showProgressBar = false
                     }
+
                     override fun onResponse(
                         call: Call<LoginResponse>,
                         response: Response<LoginResponse>
                     ) {
+                        isLoginFormComplete = false
+                        showProgressBar = false
                         if (response.isSuccessful) {
-                            Log.d("TEST", response.body()?.results?.data.toString())
-                            navigateToRegister()
-                        }else{
+                            val responseBody = response.body()
+                            Log.d("TEST", responseBody.toString())
+                            user.id = responseBody?.data?.id!!
+                            user.name = responseBody?.data?.name!!
+                            user.email = responseBody?.data?.email!!
+                            user.token = responseBody?.data?.token!!
+                            userPreference.setUser(user)
+                            navigateToHomeScreen()
+                        } else {
                             isLoginFailed = true
                         }
                     }
                 })
         }
 
-        if (isLoginFailed){
-            ShowSnackBar(message = "Email dan Password salah. Pastikan input dengan benar")
-            showProgressBar = false
+        if (isLoginFailed) {
+            Toast.makeText(context,"Email dan Password salah", Toast.LENGTH_SHORT).show()
         }
-        ShowProgressbar(showProgressBar)
-    }
-}
-
-@Composable
-fun ShowProgressbar(
-    state: Boolean
-) {
-    if (state){
-        CircularProgressIndicator(
-            color = colorPrimary,
-            strokeWidth = 4.dp,
-            modifier = Modifier
-                .size(30.dp)
-        )
+        ShowProgressBar(showProgressBar)
     }
 }
 
@@ -231,6 +239,7 @@ fun LoginScreenPreview() {
     StuntCareLightTheme {
         LoginScreen(
             navigateToRegister = {},
+            navigateToHomeScreen = {},
         )
     }
 }
