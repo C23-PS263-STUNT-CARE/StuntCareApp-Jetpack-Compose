@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,6 +57,7 @@ import com.febiarifin.stuntcare.model.dummyArticle
 import com.febiarifin.stuntcare.model.dummyBanner
 import com.febiarifin.stuntcare.ui.components.BottomSheetProfileLayout
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
+import com.febiarifin.stuntcare.util.UserPreference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -64,12 +66,15 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToFormCheck: () -> Unit,
 ) {
+    val contex = LocalContext.current
+    val userPreference = UserPreference(contex)
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Hai Febi Arifin",
+                        text = "Hai "+ userPreference.getUserName(),
                         color = Color.Black,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
