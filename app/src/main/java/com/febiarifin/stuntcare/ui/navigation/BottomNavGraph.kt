@@ -10,6 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.febiarifin.stuntcare.api.ApiService
 import com.febiarifin.stuntcare.ui.screen.auth.login.LoginScreen
 import com.febiarifin.stuntcare.ui.screen.auth.register.RegisterScreen
 import com.febiarifin.stuntcare.ui.screen.check.form.FormCheckScreen
@@ -18,7 +19,7 @@ import com.febiarifin.stuntcare.ui.screen.detail.check.DetailCheckScreen
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
-    val state = true
+    val state = false
     NavHost(navController = navController, startDestination = if (state) BottomBarScreen.Home.route else BottomBarScreen.Login.route) {
         composable(route = BottomBarScreen.Login.route){
             LoginScreen(

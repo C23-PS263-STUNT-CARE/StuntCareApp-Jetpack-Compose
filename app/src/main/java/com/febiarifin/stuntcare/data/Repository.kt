@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.flowOf
 class Repository {
     private val listCheck = mutableListOf<Check>()
     private val listArticle = mutableListOf<Article>()
+    private val message: String = "Login Berhasil"
 
     init {
         if (listCheck.isEmpty()) {

@@ -75,7 +75,7 @@ fun StuntCareApp() {
     }
 
     BackHandler(backPressState == BackPress.Idle) {
-        if (currentRoute == BottomBarScreen.Home.route) {
+        if (currentRoute == BottomBarScreen.Home.route || currentRoute == BottomBarScreen.Login.route || currentRoute == BottomBarScreen.Register.route) {
             backPressState = BackPress.InitialTouch
             showToast = true
         }else {

@@ -1,6 +1,7 @@
 package com.febiarifin.stuntcare.ui.screen.auth.login
 
 import StuntCareLightTheme
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,25 +23,34 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.febiarifin.stuntcare.api.ApiConfig
+import com.febiarifin.stuntcare.model.request.LoginRequest
+import com.febiarifin.stuntcare.model.response.LoginResponse
 import com.febiarifin.stuntcare.ui.components.ShowSnackBar
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+private lateinit var apiConfig: ApiConfig
+private val colorPrimary: Color = Color(0xFF3984E9)
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    navigateToRegister: () -> Unit
+    navigateToRegister: () -> Unit,
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val colorPrimary: Color = Color(0xFF3984E9)
     var showErrorEmail by remember { mutableStateOf(false) }
     var showErrorEmpty by remember { mutableStateOf(false) }
     var isLoginFormComplete by remember { mutableStateOf(false) }
+    var showProgressBar by remember { mutableStateOf(false) }
+    var isLoginFailed by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -165,14 +175,53 @@ fun LoginScreen(
                 Text("Login dengan Akun Google")
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+
         if (showErrorEmail) {
             ShowSnackBar(message = "Pastikan Input Email dengan Benar")
-        }else if(showErrorEmpty){
+        } else if (showErrorEmpty) {
             ShowSnackBar(message = "Email dan Password Tidak Boleh Kosong")
-        }else if(isLoginFormComplete){
-            ShowSnackBar(message = "Email : "+email+" | Password : "+password)
+        } else if (isLoginFormComplete) {
+            showProgressBar = true
+            apiConfig = ApiConfig()
+            apiConfig.getApiService().loginUser(LoginRequest(email, password))
+                .enqueue(object : Callback<LoginResponse> {
+                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                        showProgressBar = false
+                    }
+                    override fun onResponse(
+                        call: Call<LoginResponse>,
+                        response: Response<LoginResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            Log.d("TEST", response.body()?.results?.data.toString())
+                            navigateToRegister()
+                        }else{
+                            isLoginFailed = true
+                        }
+                    }
+                })
         }
+
+        if (isLoginFailed){
+            ShowSnackBar(message = "Email dan Password salah. Pastikan input dengan benar")
+            showProgressBar = false
+        }
+        ShowProgressbar(showProgressBar)
+    }
+}
+
+@Composable
+fun ShowProgressbar(
+    state: Boolean
+) {
+    if (state){
+        CircularProgressIndicator(
+            color = colorPrimary,
+            strokeWidth = 4.dp,
+            modifier = Modifier
+                .size(30.dp)
+        )
     }
 }
 
@@ -181,7 +230,7 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     StuntCareLightTheme {
         LoginScreen(
-            navigateToRegister = {}
+            navigateToRegister = {},
         )
     }
 }

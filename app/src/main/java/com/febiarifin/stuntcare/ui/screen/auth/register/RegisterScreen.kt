@@ -128,7 +128,7 @@ fun RegisterScreen(
         Button(
             onClick = {
                 val isEmailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                val isPasswordValid = password.length >= 6
+                val isPasswordValid = password.length >= 8
                 if (email.isNotEmpty() && password.isNotEmpty() && password == passwordConfirmation && isEmailValid && isPasswordValid) {
                     showErrorEmpty = false
                     showErrorEmail = false
@@ -217,7 +217,7 @@ fun RegisterScreen(
         }else if(showErrorPasswordConfirmation){
             ShowSnackBar(message = "Pastikan Input Password Konfirmasi dengan Benar")
         }else if(showErrorPassword){
-            ShowSnackBar(message = "Pastikan Password Lebih dari 6 Karakter")
+            ShowSnackBar(message = "Pastikan Password Lebih dari 8 Karakter")
         }else if(isRegisterFormComplete){
             ShowSnackBar(message = "Email : " + email + " | Password : " + password + " | Password Confirmation : " + passwordConfirmation)
         }
