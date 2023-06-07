@@ -82,19 +82,25 @@ fun HomeScreen(
                     )
                 },
                 actions = {
-                    Box(
-                        modifier = Modifier
-                            .size(35.dp)
-                            .clip(shape = CircleShape)
-                            .background(Color.Gray.copy(alpha = 0.2f))
-                            .clickable(onClick = {}),
-                        contentAlignment = androidx.compose.ui.Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_notifications),
-                            contentDescription = null,
-                            tint = Color.Black
-                        )
+                    Row {
+                        Box(
+                            modifier = Modifier
+                                .size(35.dp)
+                                .clip(shape = CircleShape)
+                                .background(Color.Gray.copy(alpha = 0.2f))
+                                .clickable(onClick = {}),
+                            contentAlignment = androidx.compose.ui.Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_notifications),
+                                contentDescription = null,
+                                tint = Color.Black
+                            )
+                        }
+                        Box(modifier = Modifier
+                            .size(5.dp)
+                            .clip(CircleShape)
+                            .background(Color.Red)) {}
                     }
                     Spacer(Modifier.width(10.dp))
                 },
