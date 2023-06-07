@@ -50,12 +50,20 @@ import androidx.compose.ui.unit.sp
 import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
+import com.febiarifin.stuntcare.util.UserPreference
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    navigateToCheck: () -> Unit,
+    navigateToEducation: () -> Unit,
+    navigateToInfo: () -> Unit,
+    navigateToLogin: () -> Unit,
+) {
     val context = LocalContext.current
+    val userPreference = UserPreference(context)
 
     Scaffold(
         topBar = {
@@ -107,9 +115,9 @@ fun ProfileScreen() {
                         .fillMaxSize(),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text(text = "Febi Arifin", style = MaterialTheme.typography.titleMedium)
+                    Text(text = userPreference.getUserName().toString(), style = MaterialTheme.typography.titleMedium)
                     Text(
-                        text = "febiarifin@gmail.com",
+                        text = userPreference.getUserEmail().toString(),
                         style = MaterialTheme.typography.titleSmall,
                         color = Color.Gray
                     )
@@ -128,7 +136,7 @@ fun ProfileScreen() {
                         .height(48.dp)
                         .clip(shape = RoundedCornerShape(16.dp))
                         .padding(4.dp)
-                        .clickable {  },
+                        .clickable { navigateToCheck() },
                 ) {
                     BoxCircleIcon(size = 40.dp, icon = Icons.Default.Check, Color.Blue)
                     Spacer(modifier = Modifier.width(16.dp))
@@ -160,7 +168,7 @@ fun ProfileScreen() {
                             .height(48.dp)
                             .clip(shape = RoundedCornerShape(16.dp))
                             .padding(4.dp)
-                            .clickable {  },
+                            .clickable { navigateToEducation() },
                     ) {
                         BoxCircleIcon(size = 40.dp, icon = Icons.Default.List, Color.Green)
                         Spacer(modifier = Modifier.width(16.dp))
@@ -224,7 +232,10 @@ fun ProfileScreen() {
                             .height(48.dp)
                             .clip(shape = RoundedCornerShape(16.dp))
                             .padding(4.dp)
-                            .clickable {  },
+                            .clickable {
+                                userPreference.clearPreference()
+                                navigateToLogin()
+                            },
                     ) {
                         BoxCircleIcon(size = 40.dp, icon = Icons.Default.Logout, Color.Red)
                         Spacer(modifier = Modifier.width(16.dp))
@@ -279,6 +290,11 @@ fun BoxCircleIcon(
 @Composable
 fun ProfileScreenPreview() {
     StuntCareTheme {
-        ProfileScreen()
+        ProfileScreen(
+            navigateToCheck = {},
+            navigateToEducation = {},
+            navigateToInfo = {},
+            navigateToLogin = {}
+        )
     }
 }

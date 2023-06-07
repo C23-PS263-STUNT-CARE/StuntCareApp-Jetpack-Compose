@@ -206,12 +206,12 @@ fun CheckForm() {
                 modifier = Modifier.padding(top = 8.dp)
             ) {
                 RadioButtonOption(
-                    text = "Male",
+                    text = "Laki-laki",
                     selected = selectedGender == "M",
                     onSelected = { selectedGender = "M" }
                 )
                 RadioButtonOption(
-                    text = "Female",
+                    text = "Perempuan",
                     selected = selectedGender == "F",
                     onSelected = { selectedGender = "F" }
                 )

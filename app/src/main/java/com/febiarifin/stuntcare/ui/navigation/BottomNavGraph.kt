@@ -24,30 +24,33 @@ fun BottomNavGraph(navController: NavHostController) {
     val context = LocalContext.current
     val userPreference = UserPreference(context)
 
-    NavHost(navController = navController, startDestination = if (userPreference.getUserToken() != null) BottomBarScreen.Home.route else BottomBarScreen.Login.route) {
-        composable(route = BottomBarScreen.Login.route){
+    NavHost(
+        navController = navController,
+        startDestination = if (userPreference.getUserToken() != null) BottomBarScreen.Home.route else BottomBarScreen.Login.route
+    ) {
+        composable(route = BottomBarScreen.Login.route) {
             LoginScreen(
                 navigateToRegister = {
-                    navController.navigate(BottomBarScreen.Register.createRoute()){
-                        popUpTo(navController.graph.id){
+                    navController.navigate(BottomBarScreen.Register.createRoute()) {
+                        popUpTo(navController.graph.id) {
                             inclusive = false
                         }
                     }
                 },
                 navigateToHomeScreen = {
-                    navController.navigate(BottomBarScreen.Home.route){
-                        popUpTo(navController.graph.id){
+                    navController.navigate(BottomBarScreen.Home.route) {
+                        popUpTo(navController.graph.id) {
                             inclusive = false
                         }
                     }
                 }
             )
         }
-        composable(route = BottomBarScreen.Register.route){
+        composable(route = BottomBarScreen.Register.route) {
             RegisterScreen(
                 navigateToLogin = {
-                    navController.navigate(BottomBarScreen.Login.createRoute()){
-                        popUpTo(navController.graph.id){
+                    navController.navigate(BottomBarScreen.Login.createRoute()) {
+                        popUpTo(navController.graph.id) {
                             inclusive = false
                         }
                     }
@@ -79,7 +82,22 @@ fun BottomNavGraph(navController: NavHostController) {
             )
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(
+                navigateToCheck = {
+                    navController.navigate(BottomBarScreen.Check.route)
+                },
+                navigateToEducation = {
+                    navController.navigate(BottomBarScreen.Education.route)
+                },
+                navigateToInfo = {},
+                navigateToLogin = {
+                    navController.navigate(BottomBarScreen.Login.route) {
+                        popUpTo(navController.graph.id) {
+                            inclusive = false
+                        }
+                    }
+                },
+            )
         }
         composable(
             route = BottomBarScreen.DetailCheck.route,
@@ -98,12 +116,12 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(
             route = BottomBarScreen.DetailArticle.route,
-            arguments = listOf(navArgument("articleId"){ type = NavType.LongType }),
-        ){
+            arguments = listOf(navArgument("articleId") { type = NavType.LongType }),
+        ) {
             val id = it.arguments?.getLong("articleId") ?: -1L
             DetailArticleScreen(
                 articleId = id,
-                navigateToBack = { navController.navigateUp()}
+                navigateToBack = { navController.navigateUp() }
             )
         }
     }

@@ -66,8 +66,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToFormCheck: () -> Unit,
 ) {
-    val contex = LocalContext.current
-    val userPreference = UserPreference(contex)
+    val context = LocalContext.current
+    val userPreference = UserPreference(context)
 
     Scaffold(
         topBar = {
@@ -187,11 +187,6 @@ private fun BannerHeader(
                     onClick = { navigateToFormCheck() },
                     colors =  ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_add),
-                        contentDescription = null
-                    )
-                    Spacer(modifier = modifier.width(6.dp))
                     Text("Cek Status Stunting")
                 }
             }
