@@ -40,16 +40,16 @@ fun CheckItem(
             .border(
                 1.dp,
                 shape = RoundedCornerShape(4.dp),
-                color = Color.Gray.copy(alpha = 0.3f)
+                color = if (check.result >= 1) Color.Yellow.copy(alpha = 0.7f) else Color.Green.copy(alpha = 0.7f)
             ),
         shape = RoundedCornerShape(4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
+            containerColor = if (check.result >= 1) Color.Yellow.copy(alpha = 0.2f) else Color.Green.copy(alpha = 0.2f),
         ),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier.padding(8.dp)
+            modifier = modifier.padding(8.dp),
         ) {
             Box(
                 modifier = modifier
@@ -68,7 +68,7 @@ fun CheckItem(
             Spacer(modifier = modifier.width(20.dp))
             Text(
                 text = check.name,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Normal
             )
             Spacer(modifier = modifier.weight(1f))
             Icon(
