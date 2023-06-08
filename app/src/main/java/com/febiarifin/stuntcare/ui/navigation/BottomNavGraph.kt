@@ -84,10 +84,26 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = BottomBarScreen.Profile.route) {
             ProfileScreen(
                 navigateToCheck = {
-                    navController.navigate(BottomBarScreen.Check.route)
+                    navController.navigate(BottomBarScreen.Check.route){
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route){
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                 navigateToEducation = {
-                    navController.navigate(BottomBarScreen.Education.route)
+                    navController.navigate(BottomBarScreen.Education.route){
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route){
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                 navigateToInfo = {},
                 navigateToLogin = {
