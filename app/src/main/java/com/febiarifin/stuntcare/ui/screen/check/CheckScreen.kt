@@ -16,9 +16,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -44,6 +47,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.febiarifin.stuntcare.di.Injection
 import com.febiarifin.stuntcare.ui.common.UiState
 import com.febiarifin.stuntcare.ui.factory.ViewModelFactory
+
+private val colorPrimary: Color = Color(0xFF3984E9)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,6 +79,11 @@ fun CheckScreen(
                 ),
             )
         },
+        floatingActionButton = {
+            FloatingButton {
+                navigateToFormCheck()
+            }
+        }
     ) {
         viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
             when(uiState){
@@ -171,6 +181,27 @@ fun CheckList(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun FloatingButton(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .padding(bottom = 80.dp, end = 16.dp)
+            .fillMaxSize(),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        FloatingActionButton(
+            onClick = onClick,
+            containerColor = colorPrimary,
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add",
+                tint = Color.White
+            )
         }
     }
 }

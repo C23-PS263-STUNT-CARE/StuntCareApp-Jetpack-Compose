@@ -1,6 +1,7 @@
 package com.febiarifin.stuntcare.ui.screen.check.form
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -264,7 +265,9 @@ fun CheckForm() {
         if (showError) {
             ShowSnackBar(message = "Pastikan Semua Field Terisi")
         } else if(isFormCheckCompleted) {
-            ShowSnackBar(message = "Semua Field Terisi " + name)
+            isFormCheckCompleted = false
+            Log.d("TEST", "Success")
+            ShowSnackBar(message = "Semua Field Terisi " + name + "JK "+selectedGender+" ASI"+ selectedASI)
         }
     }
 }
