@@ -1,4 +1,6 @@
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,11 +22,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,6 +39,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -51,6 +58,11 @@ import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 import com.febiarifin.stuntcare.util.UserPreference
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import com.febiarifin.stuntcare.ui.components.ShowProgressBar
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,6 +76,8 @@ fun ProfileScreen(
 ) {
     val context = LocalContext.current
     val userPreference = UserPreference(context)
+    var openDialog by remember { mutableStateOf(false) }
+    var showProgressBar by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -115,7 +129,10 @@ fun ProfileScreen(
                         .fillMaxSize(),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text(text = userPreference.getUserName().toString(), style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = userPreference.getUserName().toString(),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     Text(
                         text = userPreference.getUserEmail().toString(),
                         style = MaterialTheme.typography.titleSmall,
@@ -130,33 +147,33 @@ fun ProfileScreen(
                 Card(
                     modifier = Modifier.clip(shape = RoundedCornerShape(16.dp))
                 ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .clip(shape = RoundedCornerShape(16.dp))
-                        .padding(4.dp)
-                        .clickable { navigateToCheck() },
-                ) {
-                    BoxCircleIcon(size = 40.dp, icon = Icons.Default.Check, Color.Blue)
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column(
-                        modifier = Modifier.fillMaxHeight(),
-                        verticalArrangement = Arrangement.Center
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .clip(shape = RoundedCornerShape(16.dp))
+                            .padding(4.dp)
+                            .clickable { navigateToCheck() },
                     ) {
-                        Text(text = "Riwayat Check Stunting", color = Color.Gray)
+                        BoxCircleIcon(size = 40.dp, icon = Icons.Default.Check, Color.Blue)
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(
+                            modifier = Modifier.fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = "Riwayat Check Stunting", color = Color.Gray)
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Column(
+                            modifier = Modifier.fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_chevron_right),
+                                contentDescription = null
+                            )
+                        }
                     }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Column(
-                        modifier = Modifier.fillMaxHeight(),
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_chevron_right),
-                            contentDescription = null
-                        )
-                    }
-                }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Card(
@@ -200,7 +217,7 @@ fun ProfileScreen(
                             .height(48.dp)
                             .clip(shape = RoundedCornerShape(16.dp))
                             .padding(4.dp)
-                            .clickable {  },
+                            .clickable { },
                     ) {
                         BoxCircleIcon(size = 40.dp, icon = Icons.Default.Info, Color.Yellow)
                         Spacer(modifier = Modifier.width(16.dp))
@@ -233,8 +250,7 @@ fun ProfileScreen(
                             .clip(shape = RoundedCornerShape(16.dp))
                             .padding(4.dp)
                             .clickable {
-                                userPreference.clearPreference()
-                                navigateToLogin()
+                                openDialog = true
                             },
                     ) {
                         BoxCircleIcon(size = 40.dp, icon = Icons.Default.Logout, Color.Red)
@@ -258,6 +274,67 @@ fun ProfileScreen(
                     }
                 }
             }
+
+            if(showProgressBar){
+                ShowProgressBar(state = true)
+            }
+        }
+
+        if (openDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    openDialog = false
+                },
+                title = {
+                    Text(text = "Konfirmasi Logout")
+                },
+                text = {
+                    Text("Yakin ingin melanjutkan?")
+                },
+                confirmButton = {
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(shape = CircleShape)
+                            .background(Color.Green.copy(alpha = 0.2f))
+                            .clickable(onClick = {
+                                showProgressBar = true
+                                openDialog = false
+                                val handler = Handler(Looper.getMainLooper())
+                                handler.postDelayed({
+                                    showProgressBar = false
+                                    userPreference.clearPreference()
+                                    navigateToLogin()
+                                }, 1000)
+                            }),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        androidx.compose.material.Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+                    }
+                },
+                dismissButton = {
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(shape = CircleShape)
+                            .background(Color.Gray.copy(alpha = 0.2f))
+                            .clickable(onClick = {
+                                openDialog = false
+                            }),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        androidx.compose.material.Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+                    }
+                }
+            )
         }
     }
 }

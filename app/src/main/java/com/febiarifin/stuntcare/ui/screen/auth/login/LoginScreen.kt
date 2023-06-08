@@ -195,6 +195,7 @@ fun LoginScreen(
         } else if (showErrorEmpty) {
             ShowSnackBar(message = "Email dan Password Tidak Boleh Kosong")
         } else if (isLoginFormComplete) {
+            isLoginFormComplete = false
             showProgressBar = true
             isLoginFailed = false
             apiConfig = ApiConfig()
@@ -208,11 +209,10 @@ fun LoginScreen(
                         call: Call<LoginResponse>,
                         response: Response<LoginResponse>
                     ) {
-                        isLoginFormComplete = false
                         showProgressBar = false
                         if (response.isSuccessful) {
                             val responseBody = response.body()
-                            Log.d("TEST", responseBody.toString())
+                            Log.d("TEST", responseBody?.message.toString())
                             user.id = responseBody?.data?.id!!
                             user.name = responseBody?.data?.name!!
                             user.email = responseBody?.data?.email!!
@@ -220,6 +220,7 @@ fun LoginScreen(
                             userPreference.setUser(user)
                             navigateToHomeScreen()
                         } else {
+                            Log.d("TEST", "Login failed")
                             isLoginFailed = true
                         }
                     }

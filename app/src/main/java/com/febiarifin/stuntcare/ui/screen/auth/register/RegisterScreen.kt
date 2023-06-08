@@ -250,6 +250,7 @@ fun RegisterScreen(
         } else if (showErrorPassword) {
             ShowSnackBar(message = "Pastikan Password Lebih dari 8 Karakter")
         } else if (isRegisterFormComplete) {
+            isRegisterFormComplete = false
             val context = LocalContext.current
             showProgressBar = true
             isRegisterFailed = false
@@ -262,17 +263,13 @@ fun RegisterScreen(
                         call: Call<RegisterResponse>,
                         response: Response<RegisterResponse>
                     ) {
-                        isRegisterFormComplete = false
                         showProgressBar = false
                         if (response.isSuccessful) {
                             Log.d("TEST", response.body()?.message.toString())
-                            Toast.makeText(
-                                context,
-                                "Pendafataran berhasil. Silahkan login.",
-                                Toast.LENGTH_LONG
-                            ).show()
+                            Toast.makeText(context, "Pendafataran berhasil. Silahkan login.", Toast.LENGTH_LONG).show()
                             navigateToLogin()
                         } else {
+                            Log.d("TEST", "Register failed")
                             isRegisterFailed = true
                             messageError = "Email Sudah Terdaftar"
                         }
