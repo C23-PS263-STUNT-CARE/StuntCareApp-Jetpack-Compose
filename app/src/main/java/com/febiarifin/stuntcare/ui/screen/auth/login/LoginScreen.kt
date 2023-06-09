@@ -73,19 +73,19 @@ fun LoginScreen(
         )
     }
 
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult(),
-        onResult = { result ->
-            if(result.resultCode == RESULT_OK) {
-                scope.launch {
-                    val signInResult = signInClient.signInWithIntent(
-                        intent = result.data ?: return@launch
-                    )
+//    val launcher = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.StartIntentSenderForResult(),
+//        onResult = { result ->
+//            if(result.resultCode == RESULT_OK) {
+//                scope.launch {
+//                    val signInResult = signInClient.signInWithIntent(
+//                        intent = result.data ?: return@launch
+//                    )
 //                    viewModel.onSignInResult(signInResult)
-                }
-            }
-        }
-    )
+//                }
+//            }
+//        }
+//    )
 
     var passwordVisibility by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
