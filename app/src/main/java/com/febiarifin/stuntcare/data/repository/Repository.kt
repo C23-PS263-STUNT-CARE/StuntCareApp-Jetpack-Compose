@@ -1,4 +1,4 @@
-package com.febiarifin.stuntcare.data
+package com.febiarifin.stuntcare.data.repository
 
 import com.febiarifin.stuntcare.model.Article
 import com.febiarifin.stuntcare.model.Check
@@ -50,7 +50,7 @@ class Repository {
 
     companion object{
         @Volatile
-        private var instance: Repository ?= null
+        private var instance: Repository?= null
 
         fun getInstance(): Repository =
             instance ?: synchronized(this){

@@ -1,8 +1,11 @@
 package com.febiarifin.stuntcare.ui.screen.auth.login
 
 import StuntCareLightTheme
+import android.app.Activity.RESULT_OK
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,7 +14,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
@@ -19,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -29,16 +32,23 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.febiarifin.stuntcare.api.ApiConfig
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.febiarifin.stuntcare.R
+import com.febiarifin.stuntcare.data.remote.retrofit.ApiConfig
 import com.febiarifin.stuntcare.model.User
-import com.febiarifin.stuntcare.model.request.LoginRequest
-import com.febiarifin.stuntcare.model.response.LoginResponse
+import com.febiarifin.stuntcare.data.remote.request.LoginRequest
+import com.febiarifin.stuntcare.data.remote.response.LoginResponse
 import com.febiarifin.stuntcare.ui.components.ShowProgressBar
 import com.febiarifin.stuntcare.ui.components.ShowSnackBar
+import com.febiarifin.stuntcare.ui.screen.auth.GoogleAuthUiClient
 import com.febiarifin.stuntcare.util.UserPreference
+import com.google.android.gms.auth.api.identity.Identity
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.math.log
 
 private lateinit var apiConfig: ApiConfig
 private val colorPrimary: Color = Color(0xFF3984E9)
@@ -47,8 +57,36 @@ private val colorPrimary: Color = Color(0xFF3984E9)
 fun LoginScreen(
     modifier: Modifier = Modifier,
     navigateToRegister: () -> Unit,
-    navigateToHomeScreen : () -> Unit,
+    navigateToHomeScreen: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+    val userPreference = UserPreference(context)
+    val user = User()
+    val scope = rememberCoroutineScope()
+    val signInClient = remember {
+        GoogleAuthUiClient(
+            context.applicationContext,
+            Identity.getSignInClient(context.applicationContext)
+        )
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = { result ->
+            if(result.resultCode == RESULT_OK) {
+                scope.launch {
+                    val signInResult = signInClient.signInWithIntent(
+                        intent = result.data ?: return@launch
+                    )
+//                    viewModel.onSignInResult(signInResult)
+                }
+            }
+        }
+    )
+
     var passwordVisibility by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -57,10 +95,6 @@ fun LoginScreen(
     var isLoginFormComplete by remember { mutableStateOf(false) }
     var showProgressBar by remember { mutableStateOf(false) }
     var isLoginFailed by remember { mutableStateOf(false) }
-
-    val context = LocalContext.current
-    val userPreference = UserPreference(context)
-    val user = User()
 
     Column(
         modifier = Modifier
@@ -131,8 +165,9 @@ fun LoginScreen(
                 if (email.isNotEmpty() && isEmailValid && password.isNotEmpty()) {
                     showErrorEmail = false
                     showErrorEmpty = false
-                    isLoginFormComplete = false
                     isLoginFormComplete = true
+                    Log.d("login", "LoginScreen: ")
+                    viewModel.onEvent(LoginEvent.OnSignIn(email, password))
                 } else if (email.isEmpty() || password.isEmpty()) {
                     showErrorEmpty = true
                     isLoginFormComplete = false
@@ -177,13 +212,15 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
             shape = MaterialTheme.shapes.medium,
-            border = BorderStroke(1.dp, Color.Gray)
+            border = BorderStroke(1.dp, Color.Gray.copy(alpha = 0.2f))
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    imageVector = Icons.Default.AccountCircle,
+                    painter = painterResource(id = R.drawable.google),
                     contentDescription = "Akun Google",
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(20.dp)
                 )
                 Text("Login dengan Akun Google")
             }
@@ -196,43 +233,71 @@ fun LoginScreen(
             ShowSnackBar(message = "Email dan Password Tidak Boleh Kosong")
         } else if (isLoginFormComplete) {
             isLoginFormComplete = false
-            showProgressBar = true
-            isLoginFailed = false
-            apiConfig = ApiConfig()
-            apiConfig.getApiService().login(LoginRequest(email, password))
-                .enqueue(object : Callback<LoginResponse> {
-                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                        showProgressBar = false
-                    }
-
-                    override fun onResponse(
-                        call: Call<LoginResponse>,
-                        response: Response<LoginResponse>
-                    ) {
-                        showProgressBar = false
-                        if (response.isSuccessful) {
-                            val responseBody = response.body()
-                            Log.d("TEST", responseBody?.message.toString())
-                            user.id = responseBody?.data?.id!!
-                            user.name = responseBody?.data?.name!!
-                            user.email = responseBody?.data?.email!!
-                            user.token = responseBody?.data?.token!!
-                            userPreference.setUser(user)
-                            navigateToHomeScreen()
-                        } else {
-                            Log.d("TEST", "Login failed")
-                            isLoginFailed = true
-                        }
-                    }
-                })
+//            showProgressBar = true
+//            isLoginFailed = false
+//            apiConfig = ApiConfig()
+//            apiConfig.getApiService().login(LoginRequest(email, password))
+//                .enqueue(object : Callback<LoginResponse> {
+//                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+//                        showProgressBar = false
+//                    }
+//
+//                    override fun onResponse(
+//                        call: Call<LoginResponse>,
+//                        response: Response<LoginResponse>
+//                    ) {
+//                        showProgressBar = false
+//                        if (response.isSuccessful) {
+//                            val responseBody = response.body()
+//                            Log.d("TEST", responseBody?.message.toString())
+//                            user.id = responseBody?.data?.id!!
+//                            user.name = responseBody?.data?.name!!
+//                            user.email = responseBody?.data?.email!!
+//                            user.token = responseBody?.data?.token!!
+//                            userPreference.setUser(user)
+//                            navigateToHomeScreen()
+//                        } else {
+//                            Log.d("TEST", "Login failed")
+//                            isLoginFailed = true
+//                        }
+//                    }
+//                })
         }
 
         if (isLoginFailed) {
-            Toast.makeText(context,"Email dan Password salah", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Email dan Password salah", Toast.LENGTH_SHORT).show()
         }
+
+//        LaunchedEffect(key1 = state.signInError){
+//            state.signInError?.let { error ->
+//                Toast.makeText(context,  error, Toast.LENGTH_LONG).show()
+//            }
+//        }
+
+        LaunchedEffect(key1 = state.loading) {
+            showProgressBar = state.loading
+            if (state.data?.error == false) {
+                val data = state.data?.data
+                Log.d("TEST", "${state.data?.message}")
+                user.id = data?.id ?: ""
+                user.name = data?.name ?: ""
+                user.email = data?.email ?: ""
+                user.token = data?.token ?: ""
+                userPreference.setUser(user)
+                navigateToHomeScreen()
+            }
+            if (state.data?.error == true) {
+                Toast.makeText(context, state.data?.message.toString(), Toast.LENGTH_SHORT).show()
+            }
+            state.errorMessage?.let {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
+        }
+
         ShowProgressBar(showProgressBar)
     }
 }
+
 
 @Preview
 @Composable
@@ -241,6 +306,9 @@ fun LoginScreenPreview() {
         LoginScreen(
             navigateToRegister = {},
             navigateToHomeScreen = {},
-        )
+
+            )
     }
 }
+
+

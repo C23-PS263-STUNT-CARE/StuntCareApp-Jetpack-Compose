@@ -2,7 +2,7 @@ package com.febiarifin.stuntcare.ui.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.febiarifin.stuntcare.data.Repository
+import com.febiarifin.stuntcare.data.repository.Repository
 import com.febiarifin.stuntcare.ui.screen.check.CheckViewModel
 import com.febiarifin.stuntcare.ui.screen.detail.article.DetailArticleViewModel
 import com.febiarifin.stuntcare.ui.screen.detail.check.DetailCheckViewModel

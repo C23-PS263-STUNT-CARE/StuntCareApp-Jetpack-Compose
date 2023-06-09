@@ -2,7 +2,7 @@ package com.febiarifin.stuntcare.ui.screen.detail.check
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.febiarifin.stuntcare.data.Repository
+import com.febiarifin.stuntcare.data.repository.Repository
 import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.ui.common.UiState
 import kotlinx.coroutines.flow.MutableStateFlow

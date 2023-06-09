@@ -1,4 +1,4 @@
-package com.febiarifin.stuntcare.api
+package com.febiarifin.stuntcare.data.remote.retrofit
 
 import com.febiarifin.stuntcare.util.Constants
 import retrofit2.Retrofit

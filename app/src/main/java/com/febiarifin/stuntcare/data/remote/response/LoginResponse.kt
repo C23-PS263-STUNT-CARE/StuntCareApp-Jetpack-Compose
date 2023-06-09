@@ -1,4 +1,4 @@
-package com.febiarifin.stuntcare.model.response
+package com.febiarifin.stuntcare.data.remote.response
 
 import com.febiarifin.stuntcare.model.User
 

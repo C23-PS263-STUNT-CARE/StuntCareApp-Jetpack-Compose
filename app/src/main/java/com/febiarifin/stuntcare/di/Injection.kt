@@ -1,9 +1,9 @@
 package com.febiarifin.stuntcare.di
 
-import com.febiarifin.stuntcare.data.Repository
+import com.febiarifin.stuntcare.data.repository.Repository
 
 object Injection {
-    fun provideRepository(): Repository{
+    fun provideRepository(): Repository {
         return Repository.getInstance()
     }
 }

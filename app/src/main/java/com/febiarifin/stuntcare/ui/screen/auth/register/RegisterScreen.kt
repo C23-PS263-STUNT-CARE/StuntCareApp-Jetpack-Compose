@@ -7,11 +7,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
@@ -19,20 +17,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.febiarifin.stuntcare.api.ApiConfig
-import com.febiarifin.stuntcare.model.request.RegisterRequest
-import com.febiarifin.stuntcare.model.response.RegisterResponse
+import com.febiarifin.stuntcare.R
+import com.febiarifin.stuntcare.data.remote.retrofit.ApiConfig
+import com.febiarifin.stuntcare.data.remote.request.RegisterRequest
+import com.febiarifin.stuntcare.data.remote.response.RegisterResponse
 import com.febiarifin.stuntcare.ui.components.ShowProgressBar
 import com.febiarifin.stuntcare.ui.components.ShowSnackBar
 import retrofit2.Call
@@ -228,13 +227,13 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
             shape = MaterialTheme.shapes.medium,
-            border = BorderStroke(1.dp, Color.Gray)
+            border = BorderStroke(1.dp, Color.Gray.copy(alpha = 0.2f))
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    imageVector = Icons.Default.AccountCircle,
+                    painter = painterResource(id = R.drawable.google),
                     contentDescription = "Akun Google",
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = 8.dp).size(20.dp)
                 )
                 Text("Daftar dengan Akun Google")
             }

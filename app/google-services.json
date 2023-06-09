@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "364343837660",
+    "project_id": "stuntcare-7bebf",
+    "storage_bucket": "stuntcare-7bebf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364343837660:android:c8f495cb1c650906c38519",
+        "android_client_info": {
+          "package_name": "com.febiarifin.stuntcare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "364343837660-lnops7pgo52e52lqvpq0luv8oevbebha.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.febiarifin.stuntcare",
+            "certificate_hash": "81f2cf7d63493d3917175e0397df44c675f426db"
+          }
+        },
+        {
+          "client_id": "364343837660-trobt4im9j1np0pf62kga5sa7l5cabc3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsWUJwVKXkhZTSnae6IAjpgZ6JiYbkj4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "364343837660-trobt4im9j1np0pf62kga5sa7l5cabc3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

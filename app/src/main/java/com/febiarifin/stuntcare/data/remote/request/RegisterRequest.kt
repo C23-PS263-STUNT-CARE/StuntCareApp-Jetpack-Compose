@@ -1,4 +1,4 @@
-package com.febiarifin.stuntcare.model.request
+package com.febiarifin.stuntcare.data.remote.request
 
 data class RegisterRequest(
     var name: String,

@@ -2,7 +2,7 @@ package com.febiarifin.stuntcare.ui.screen.education
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.febiarifin.stuntcare.data.Repository
+import com.febiarifin.stuntcare.data.repository.Repository
 import com.febiarifin.stuntcare.model.Article
 import com.febiarifin.stuntcare.ui.common.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
