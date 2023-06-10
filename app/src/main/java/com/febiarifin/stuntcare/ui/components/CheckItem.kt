@@ -40,11 +40,11 @@ fun CheckItem(
             .border(
                 1.dp,
                 shape = RoundedCornerShape(4.dp),
-                color = if (check.result >= 1) Color.Yellow.copy(alpha = 0.7f) else Color.Green.copy(alpha = 0.7f)
+                color = if (check.status_stunting >= 1) Color.Yellow.copy(alpha = 0.7f) else Color.Green.copy(alpha = 0.7f)
             ),
         shape = RoundedCornerShape(4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (check.result >= 1) Color.Yellow.copy(alpha = 0.2f) else Color.Green.copy(alpha = 0.2f),
+            containerColor = if (check.status_stunting >= 1) Color.Yellow.copy(alpha = 0.2f) else Color.Green.copy(alpha = 0.2f),
         ),
     ) {
         Row(
@@ -84,7 +84,7 @@ fun CheckItem(
 fun CheckItemPreview() {
     StuntCareTheme {
         CheckItem(
-            Check(1, "Anak 1", "Laki-laki", "2", "1.5", "40", "4", "80", "Ya", 0.4),
+            Check(2, "Anak 2", "Perempuan", 12, 2.8, 48.0, 7.2, 70.2, "Yes", 0.6),
         )
     }
 }

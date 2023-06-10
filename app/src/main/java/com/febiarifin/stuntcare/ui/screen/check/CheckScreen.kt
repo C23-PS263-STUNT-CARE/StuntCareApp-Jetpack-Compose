@@ -1,4 +1,6 @@
 import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,17 +30,25 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.ui.screen.check.CheckViewModel
@@ -46,7 +56,9 @@ import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.febiarifin.stuntcare.di.Injection
 import com.febiarifin.stuntcare.ui.common.UiState
+import com.febiarifin.stuntcare.ui.components.ShowProgressBar
 import com.febiarifin.stuntcare.ui.factory.ViewModelFactory
+import com.febiarifin.stuntcare.util.UserPreference
 
 private val colorPrimary: Color = Color(0xFF3984E9)
 
@@ -55,12 +67,19 @@ private val colorPrimary: Color = Color(0xFF3984E9)
 @Composable
 fun CheckScreen(
     modifier: Modifier = Modifier,
-    viewModel: CheckViewModel = viewModel(
-        factory = ViewModelFactory(Injection.provideRepository())
-    ),
+//    viewModel: CheckViewModel = viewModel(
+//        factory = ViewModelFactory(Injection.provideRepository())
+//    ),
     navigateToDetailCheck: (Long) -> Unit,
     navigateToFormCheck: () -> Unit,
+    viewModel: CheckViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val userPreference = UserPreference(context)
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    var showProgressBar by remember { mutableStateOf(false) }
+    val listCheck = mutableListOf<Check>()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -85,22 +104,46 @@ fun CheckScreen(
             }
         }
     ) {
-        viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
-            when(uiState){
-                is UiState.Loading -> {
-                    viewModel.getAllCheck()
+//        viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+//            when(uiState){
+//                is UiState.Loading -> {
+//                    viewModel.getAllCheck()
+//                }
+//                is UiState.Success -> {
+//                    CheckList(
+//                        uiState.data,
+//                        navigateToDetailCheck = navigateToDetailCheck,
+//                        navigateToFormCheck = navigateToFormCheck,
+//                    )
+//                }
+//                is UiState.Error -> {}
+//            }
+//        }
+        viewModel.getAllCheckHistory(
+            "Bearer " + userPreference.getUserToken().toString(),
+            userPreference.getUserId().toString()
+        )
+
+        LaunchedEffect(key1 = state.loading) {
+            showProgressBar = state.loading
+            val data = state.data
+            Toast.makeText(context, state.loading.toString(), Toast.LENGTH_LONG).show()
+            if (state.data != null) {
+                data?.forEach { check ->
+                    listCheck.add(check)
                 }
-                is UiState.Success -> {
-                    CheckList(
-                        uiState.data,
-                        navigateToDetailCheck = navigateToDetailCheck,
-                        navigateToFormCheck = navigateToFormCheck,
-                    )
-                }
-                is UiState.Error -> {}
+            }
+            state.errorMessage?.let {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             }
         }
 
+        CheckList(
+            if(listCheck.isEmpty()) listOf() else listCheck,
+            navigateToDetailCheck = navigateToDetailCheck,
+            navigateToFormCheck = navigateToFormCheck,
+        )
+        ShowProgressBar(state = showProgressBar)
     }
 }
 

@@ -86,7 +86,6 @@ fun LoginScreen(
     var showErrorEmpty by remember { mutableStateOf(false) }
     var isLoginFormComplete by remember { mutableStateOf(false) }
     var showProgressBar by remember { mutableStateOf(false) }
-    var isLoginFailed by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier

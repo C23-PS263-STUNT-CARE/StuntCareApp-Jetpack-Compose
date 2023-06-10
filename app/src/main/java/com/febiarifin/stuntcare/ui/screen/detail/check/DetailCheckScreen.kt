@@ -129,7 +129,7 @@ fun DetailCheckContent(
             horizontalArrangement = Arrangement.Center,
         ) {
             CustomText(
-                text = if (check.result >= 1) "Berisiko Stunting" else "Aman Dari Stunting",
+                text = if (check.status_stunting >= 1) "Berisiko Stunting" else "Aman Dari Stunting",
                 color = Color.Gray
             )
         }
@@ -195,7 +195,7 @@ fun DetailCheckContent(
                         ),
                         content = {
                             CustomText(
-                                text = check.birth_length + " CM",
+                                text = check.birth_length.toString() + " CM",
                                 color = Color.Black.copy(alpha = 0.7f),
                                 isBold = true
                             )
@@ -258,7 +258,7 @@ fun DetailCheckContent(
                         ),
                         content = {
                             CustomText(
-                                text = check.birth_weight + " KG",
+                                text = check.birth_weight.toString() + " KG",
                                 color = Color.Black.copy(alpha = 0.7f),
                                 isBold = true
                             )
@@ -309,13 +309,13 @@ fun DetailCheckContent(
                 Row {
                     CustomText(text = "Tinggi Badan Anak")
                     Spacer(modifier = Modifier.weight(1f))
-                    CustomText(text = check.body_length + " CM", isBold = true)
+                    CustomText(text = check.body_length.toString() + " CM", isBold = true)
                 }
                 Divider(thickness = 1.dp, color = Color.Gray.copy(alpha = 0.5f))
                 Row {
                     CustomText(text = "Berat Badan Anak")
                     Spacer(modifier = Modifier.weight(1f))
-                    CustomText(text = check.body_weight + " KG", isBold = true)
+                    CustomText(text = check.body_weight.toString() + " KG", isBold = true)
                 }
                 Divider(thickness = 1.dp, color = Color.Gray.copy(alpha = 0.5f))
                 Row {
