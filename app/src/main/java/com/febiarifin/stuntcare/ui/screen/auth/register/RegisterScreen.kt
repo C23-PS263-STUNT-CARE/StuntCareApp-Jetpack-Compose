@@ -28,23 +28,20 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.febiarifin.stuntcare.R
-import com.febiarifin.stuntcare.data.remote.retrofit.ApiConfig
-import com.febiarifin.stuntcare.data.remote.request.RegisterRequest
-import com.febiarifin.stuntcare.data.remote.response.RegisterResponse
 import com.febiarifin.stuntcare.ui.components.ShowProgressBar
 import com.febiarifin.stuntcare.ui.components.ShowSnackBar
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
-private lateinit var apiConfig: ApiConfig
 
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
     navigateToLogin: () -> Unit,
+    viewModelRegister: RegisterViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    val state by viewModelRegister.state.collectAsStateWithLifecycle()
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -165,6 +162,8 @@ fun RegisterScreen(
                     showErrorPasswordConfirmation = false
                     showErrorPassword = false
                     isRegisterFormComplete = true
+                    Log.d("TEST", "Form Register completed")
+                    viewModelRegister.onEvent(RegisterEvent.OnSignUp(name, email, password, passwordConfirmation))
                 } else if (name.isEmpty() && email.isEmpty() || password.isEmpty() || passwordConfirmation.isEmpty()) {
                     showErrorEmail = false
                     showErrorPasswordConfirmation = false
@@ -233,7 +232,9 @@ fun RegisterScreen(
                 Image(
                     painter = painterResource(id = R.drawable.google),
                     contentDescription = "Akun Google",
-                    modifier = Modifier.padding(end = 8.dp).size(20.dp)
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(20.dp)
                 )
                 Text("Daftar dengan Akun Google")
             }
@@ -250,34 +251,19 @@ fun RegisterScreen(
             ShowSnackBar(message = "Pastikan Password Lebih dari 8 Karakter")
         } else if (isRegisterFormComplete) {
             isRegisterFormComplete = false
-            val context = LocalContext.current
-            showProgressBar = true
-            isRegisterFailed = false
-            apiConfig = ApiConfig()
-            apiConfig.getApiService()
-                .register(RegisterRequest(name, email, password, passwordConfirmation))
-                .enqueue(object : Callback<RegisterResponse> {
-                    override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {}
-                    override fun onResponse(
-                        call: Call<RegisterResponse>,
-                        response: Response<RegisterResponse>
-                    ) {
-                        showProgressBar = false
-                        if (response.isSuccessful) {
-                            Log.d("TEST", response.body()?.message.toString())
-                            Toast.makeText(context, "Pendafataran berhasil. Silahkan login.", Toast.LENGTH_LONG).show()
-                            navigateToLogin()
-                        } else {
-                            Log.d("TEST", "Register failed")
-                            isRegisterFailed = true
-                            messageError = "Email Sudah Terdaftar"
-                        }
-                    }
-                })
         }
-        if (isRegisterFailed) {
-            val context = LocalContext.current
-            Toast.makeText(context, "Email sudah digunakan. Silahkan gunakan email lainnya", Toast.LENGTH_SHORT).show()
+
+        LaunchedEffect(key1 = state.loading){
+            showProgressBar = state.loading
+            if (state.data?.error == false) {
+                navigateToLogin()
+            }
+            if (state.data?.error == true) {
+                Toast.makeText(context, state.data?.message.toString(), Toast.LENGTH_SHORT).show()
+            }
+            state.errorMessage?.let {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
         }
         ShowProgressBar(showProgressBar)
     }
