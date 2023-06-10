@@ -35,22 +35,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.febiarifin.stuntcare.R
-import com.febiarifin.stuntcare.data.remote.retrofit.ApiConfig
 import com.febiarifin.stuntcare.model.User
-import com.febiarifin.stuntcare.data.remote.request.LoginRequest
-import com.febiarifin.stuntcare.data.remote.response.LoginResponse
 import com.febiarifin.stuntcare.ui.components.ShowProgressBar
 import com.febiarifin.stuntcare.ui.components.ShowSnackBar
 import com.febiarifin.stuntcare.ui.screen.auth.GoogleAuthUiClient
 import com.febiarifin.stuntcare.util.UserPreference
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import kotlin.math.log
 
-private lateinit var apiConfig: ApiConfig
 private val colorPrimary: Color = Color(0xFF3984E9)
 
 @Composable
@@ -233,46 +225,7 @@ fun LoginScreen(
             ShowSnackBar(message = "Email dan Password Tidak Boleh Kosong")
         } else if (isLoginFormComplete) {
             isLoginFormComplete = false
-//            showProgressBar = true
-//            isLoginFailed = false
-//            apiConfig = ApiConfig()
-//            apiConfig.getApiService().login(LoginRequest(email, password))
-//                .enqueue(object : Callback<LoginResponse> {
-//                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-//                        showProgressBar = false
-//                    }
-//
-//                    override fun onResponse(
-//                        call: Call<LoginResponse>,
-//                        response: Response<LoginResponse>
-//                    ) {
-//                        showProgressBar = false
-//                        if (response.isSuccessful) {
-//                            val responseBody = response.body()
-//                            Log.d("TEST", responseBody?.message.toString())
-//                            user.id = responseBody?.data?.id!!
-//                            user.name = responseBody?.data?.name!!
-//                            user.email = responseBody?.data?.email!!
-//                            user.token = responseBody?.data?.token!!
-//                            userPreference.setUser(user)
-//                            navigateToHomeScreen()
-//                        } else {
-//                            Log.d("TEST", "Login failed")
-//                            isLoginFailed = true
-//                        }
-//                    }
-//                })
         }
-
-        if (isLoginFailed) {
-            Toast.makeText(context, "Email dan Password salah", Toast.LENGTH_SHORT).show()
-        }
-
-//        LaunchedEffect(key1 = state.signInError){
-//            state.signInError?.let { error ->
-//                Toast.makeText(context,  error, Toast.LENGTH_LONG).show()
-//            }
-//        }
 
         LaunchedEffect(key1 = state.loading) {
             showProgressBar = state.loading
