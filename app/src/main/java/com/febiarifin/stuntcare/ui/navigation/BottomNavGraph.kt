@@ -37,38 +37,11 @@ fun BottomNavGraph(navController: NavHostController) {
     val context = LocalContext.current
     val userPreference = UserPreference(context)
 
-//    val googleAuthUiClient by lazy {
-//        GoogleAuthUiClient(
-//            context = context,
-//            oneTapClient = Identity.getSignInClient()
-//        )
-//    }
-
     NavHost(
         navController = navController,
         startDestination = if (userPreference.getUserToken() != null) BottomBarScreen.Home.route else BottomBarScreen.Login.route
     ) {
         composable(route = BottomBarScreen.Login.route) {
-            val viewModel = viewModel<SignInViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            val launcher = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.StartIntentSenderForResult(),
-                onResult = { result ->
-                    if (result.resultCode == RESULT_OK) {
-                        val data: Intent? = result.data
-//                        lifecycleScope.launch {
-//                            val signInResult = googleAuthUiClient.signInWithIntent(
-//                                intent = result.data ?: return@launch
-//                            )
-//                            viewModel.onSignInResult(signInResult)
-//                        }
-                    }
-                }
-            )
-            
-//            LaunchedEffect(key1 = state.isSignInSuccessful){
-//                coroutineScope {  }
-//            }
             
             LoginScreen(
                 navigateToRegister = {
