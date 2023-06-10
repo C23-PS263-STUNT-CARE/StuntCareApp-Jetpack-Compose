@@ -303,8 +303,8 @@ fun ProfileScreen(
                                 val handler = Handler(Looper.getMainLooper())
                                 handler.postDelayed({
                                     showProgressBar = false
-                                    userPreference.clearPreference()
                                     navigateToLogin()
+                                    userPreference.clearPreference()
                                 }, 1000)
                             }),
                         contentAlignment = Alignment.Center,

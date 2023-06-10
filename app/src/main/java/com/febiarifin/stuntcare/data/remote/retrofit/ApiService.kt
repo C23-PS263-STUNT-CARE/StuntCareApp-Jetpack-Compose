@@ -1,6 +1,7 @@
 package com.febiarifin.stuntcare.data.remote.retrofit
 
 import com.febiarifin.stuntcare.data.remote.response.CheckHistoryResponse
+import com.febiarifin.stuntcare.data.remote.response.CheckResponse
 import com.febiarifin.stuntcare.data.remote.response.LoginResponse
 import com.febiarifin.stuntcare.data.remote.response.RegisterResponse
 import com.febiarifin.stuntcare.util.Constants
@@ -28,11 +29,24 @@ interface ApiService {
         @Field("confPassword") confPassword: String,
     ): RegisterResponse
 
-
-    @FormUrlEncoded
     @GET(Constants.CHECK_HISTORY)
     suspend fun getAllCheckHistory(
         @Header("Authorization") token: String,
         @Path("userId") userId: String,
     ): CheckHistoryResponse
+
+    @FormUrlEncoded
+    @POST(Constants.CHECK_POST)
+    suspend fun checkStunting(
+        @Header("Authorization") token: String,
+        @Path("userId") userId: String,
+        @Field("name") name: String,
+        @Field("sex") sex: String,
+        @Field("age") age: Int,
+        @Field("birth_weight") birthWeight: Double,
+        @Field("birth_length") birthLength: Double,
+        @Field("body_weight") bodyWeight: Double,
+        @Field("body_length") bodyLength: Double,
+        @Field("asi_eksklusif") asiEksklusif: String,
+    ): CheckResponse
 }

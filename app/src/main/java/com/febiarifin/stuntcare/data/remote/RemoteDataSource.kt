@@ -1,6 +1,7 @@
 package com.febiarifin.stuntcare.data.remote
 
 import com.febiarifin.stuntcare.data.remote.response.CheckHistoryResponse
+import com.febiarifin.stuntcare.data.remote.response.CheckResponse
 import com.febiarifin.stuntcare.data.remote.response.LoginResponse
 import com.febiarifin.stuntcare.data.remote.response.RegisterResponse
 import com.febiarifin.stuntcare.data.remote.retrofit.ApiService
@@ -22,6 +23,10 @@ class RemoteDataSource @Inject constructor(
 
     suspend fun getAllCheckHistory(token: String, userId: String): CheckHistoryResponse{
         return apiService.getAllCheckHistory(token, userId)
+    }
+
+    suspend fun checkStunting(token: String,userId: String, name: String, sex: String, age: Int, birthWeight: Double, birthLength: Double, bodyWeight: Double, bodyLength: Double, asiEksklusif: String): CheckResponse{
+        return apiService.checkStunting(token,userId, name, sex, age, birthWeight, birthLength, bodyWeight, bodyLength, asiEksklusif)
     }
 
 }
