@@ -28,8 +28,6 @@ interface ApiService {
         @Field("confPassword") confPassword: String,
     ): RegisterResponse
 
-
-    @FormUrlEncoded
     @GET(Constants.CHECK_HISTORY)
     suspend fun getAllCheckHistory(
         @Header("Authorization") token: String,
