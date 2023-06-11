@@ -217,7 +217,9 @@ fun ProfileScreen(
                             .height(48.dp)
                             .clip(shape = RoundedCornerShape(16.dp))
                             .padding(4.dp)
-                            .clickable { },
+                            .clickable {
+                                navigateToInfo()
+                            },
                     ) {
                         BoxCircleIcon(size = 40.dp, icon = Icons.Default.Info, Color.Yellow)
                         Spacer(modifier = Modifier.width(16.dp))
@@ -275,7 +277,7 @@ fun ProfileScreen(
                 }
             }
 
-            if(showProgressBar){
+            if (showProgressBar) {
                 ShowProgressBar(state = true)
             }
         }

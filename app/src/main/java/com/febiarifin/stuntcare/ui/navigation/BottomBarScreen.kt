@@ -63,4 +63,8 @@ sealed class BottomBarScreen(
     object DetailArticle: BottomBarScreen("article/{articleId}"){
         fun createRoute(articleId: Long) = "article/$articleId"
     }
+
+    object Info: BottomBarScreen("info"){
+        fun createRoute() = "info"
+    }
 }

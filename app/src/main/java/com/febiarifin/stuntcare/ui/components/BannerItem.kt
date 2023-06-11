@@ -1,4 +1,5 @@
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,7 +27,7 @@ fun BannerItem(
         contentDescription = "Image",
         modifier = modifier
             .height(120.dp)
-            .width(300.dp)
+            .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .border(
                 1.dp,

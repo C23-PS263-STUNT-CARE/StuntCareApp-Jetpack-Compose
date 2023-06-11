@@ -56,15 +56,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.model.Article
 import com.febiarifin.stuntcare.model.Info
 import com.febiarifin.stuntcare.model.dummyArticle
-import com.febiarifin.stuntcare.model.dummyBanner
-import com.febiarifin.stuntcare.ui.components.BottomSheetProfileLayout
 import com.febiarifin.stuntcare.ui.components.ShowProgressBar
 import com.febiarifin.stuntcare.ui.screen.home.HomeViewModel
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
@@ -76,7 +71,8 @@ import com.febiarifin.stuntcare.util.UserPreference
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToFormCheck: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    navigateToInfo: () -> Unit
 ) {
     val context = LocalContext.current
     val userPreference = UserPreference(context)
@@ -101,8 +97,10 @@ fun HomeScreen(
                                 .size(35.dp)
                                 .clip(shape = CircleShape)
                                 .background(Color.Gray.copy(alpha = 0.2f))
-                                .clickable(onClick = {}),
-                            contentAlignment = androidx.compose.ui.Alignment.Center
+                                .clickable(onClick = {
+                                    navigateToInfo()
+                                }),
+                            contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_notifications),
@@ -286,6 +284,6 @@ fun SectionText(
 @Composable
 fun HomeScreenPreview() {
     StuntCareTheme {
-        HomeScreen(navigateToFormCheck = {})
+        HomeScreen(navigateToFormCheck = {}, navigateToInfo = {})
     }
 }

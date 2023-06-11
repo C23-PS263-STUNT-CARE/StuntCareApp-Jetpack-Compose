@@ -3,6 +3,7 @@ package com.febiarifin.stuntcare.ui.navigation
 import CheckScreen
 import EducationScreen
 import HomeScreen
+import InfoScreen
 import ProfileScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -65,6 +66,17 @@ fun BottomNavGraph(navController: NavHostController) {
             HomeScreen(
                 navigateToFormCheck = {
                     navController.navigate(BottomBarScreen.FormCheck.createRoute())
+                },
+                navigateToInfo = {
+                    navController.navigate(BottomBarScreen.Info.createRoute()){
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             )
         }
@@ -109,7 +121,17 @@ fun BottomNavGraph(navController: NavHostController) {
                         restoreState = true
                     }
                 },
-                navigateToInfo = {},
+                navigateToInfo = {
+                    navController.navigate(BottomBarScreen.Info.createRoute()){
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
                 navigateToLogin = {
                     navController.navigate(BottomBarScreen.Login.route) {
                         popUpTo(navController.graph.id) {
@@ -253,6 +275,11 @@ fun BottomNavGraph(navController: NavHostController) {
                     }
                 },
                 checkId = id,
+            )
+        }
+        composable(route = BottomBarScreen.Info.route) {
+            InfoScreen(
+               navigateToBack = { navController.navigateUp() }
             )
         }
     }

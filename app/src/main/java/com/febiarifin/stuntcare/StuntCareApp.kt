@@ -44,7 +44,7 @@ fun StuntCareApp() {
 
     Scaffold(
         bottomBar = {
-            if (currentRoute != BottomBarScreen.Login.route && currentRoute != BottomBarScreen.Register.route && currentRoute != BottomBarScreen.FormCheck.route && currentRoute != BottomBarScreen.DetailCheck.route && currentRoute != BottomBarScreen.DetailArticle.route && currentRoute != BottomBarScreen.UpdateCheck.route && currentRoute != BottomBarScreen.CopyCheck.route) {
+            if (currentRoute != BottomBarScreen.Login.route && currentRoute != BottomBarScreen.Register.route && currentRoute != BottomBarScreen.FormCheck.route && currentRoute != BottomBarScreen.DetailCheck.route && currentRoute != BottomBarScreen.DetailArticle.route && currentRoute != BottomBarScreen.UpdateCheck.route && currentRoute != BottomBarScreen.CopyCheck.route && currentRoute != BottomBarScreen.Info.route) {
                 LaunchedEffect(Unit) {
                     delay(500)
                     showContent = true
