@@ -92,7 +92,7 @@ fun InfoScreen(
             "Bearer " + userPreference.getUserToken().toString(),
         )
         InfoList(
-            null,
+            state.data,
         )
         if (state.data == null){
             ShowProgressBar(state = true, isFillMaxSize = true)
