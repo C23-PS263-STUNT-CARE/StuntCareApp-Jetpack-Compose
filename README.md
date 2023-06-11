@@ -1,8 +1,8 @@
 # StuntCare Made by Jetpack Compose
 
 # About 
--Stunting-Detection-App-StuntCare
--StuntCare : Application for detecting the stunting by characteristics
+- Stunting-Detection-App-StuntCare
+- StuntCare : Application for detecting the stunting by characteristics
 
 ## Technologies ##
 Project is created with:
