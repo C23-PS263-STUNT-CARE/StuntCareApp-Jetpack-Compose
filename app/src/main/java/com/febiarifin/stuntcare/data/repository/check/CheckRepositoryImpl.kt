@@ -2,6 +2,7 @@ package com.febiarifin.stuntcare.data.repository.check
 
 import com.febiarifin.stuntcare.data.remote.RemoteDataSource
 import com.febiarifin.stuntcare.data.remote.response.CheckResponse
+import com.febiarifin.stuntcare.data.remote.response.DeleteResponse
 import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.util.Result
 import kotlinx.coroutines.flow.Flow
@@ -71,6 +72,46 @@ class CheckRepositoryImpl @Inject constructor(
                 )
                 emit(Result.Success(response))
             } catch (e: Exception) {
+                emit(Result.Error("Terjadi Kesalahan"))
+            }
+        }
+    }
+
+    override fun deleteStuntingById(
+        token: String,
+        userId: String,
+        checkId: Int
+    ): Flow<Result<DeleteResponse>> {
+        return flow {
+            emit(Result.Loading())
+            try {
+                val response = remoteDataSource.deleteStuntingById(token, userId, checkId)
+                emit(Result.Success(response))
+            }catch (e: Exception){
+                emit(Result.Error("Terjadi Kesalahan"))
+            }
+        }
+    }
+
+    override fun updateStunting(
+        token: String,
+        userId: String,
+        checkId: Int,
+        name: String,
+        sex: String,
+        age: Int,
+        birthWeight: Double,
+        birthLength: Double,
+        bodyWeight: Double,
+        bodyLength: Double,
+        asiEksklusif: String
+    ): Flow<Result<CheckResponse>> {
+        return flow {
+            emit(Result.Loading())
+            try {
+                val response = remoteDataSource.updateStunting(token, userId, checkId, name, sex, age, birthWeight, birthLength, bodyWeight, bodyLength, asiEksklusif)
+                emit(Result.Success(response))
+            }catch (e: Exception){
                 emit(Result.Error("Terjadi Kesalahan"))
             }
         }

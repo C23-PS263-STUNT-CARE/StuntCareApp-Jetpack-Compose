@@ -6,5 +6,5 @@ object Constants {
     const val REGISTER_URL = "register"
     const val CHECK_POST = "v1/cek/{userId}"
     const val CHECK_HISTORY = "v1/history/{userId}"
-    const val CHECK_HISTORY_BY_ID = "v1/stunting/{userId}/{checkId}"
+    const val CHECK_GET_UPDATE_DELETE = "v1/stunting/{userId}/{checkId}"
 }

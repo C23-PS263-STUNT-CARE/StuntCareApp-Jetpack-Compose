@@ -4,32 +4,22 @@ import CheckScreen
 import EducationScreen
 import HomeScreen
 import ProfileScreen
-import android.app.Activity.RESULT_OK
-import android.content.Intent
-import android.provider.ContactsContract.CommonDataKinds.Identity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.febiarifin.stuntcare.ui.screen.auth.SignInViewModel
+import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.ui.screen.auth.login.LoginScreen
 import com.febiarifin.stuntcare.ui.screen.auth.register.RegisterScreen
 import com.febiarifin.stuntcare.ui.screen.check.form.FormCheckScreen
+import com.febiarifin.stuntcare.ui.screen.check.form.FormCopyCheckScreen
+import com.febiarifin.stuntcare.ui.screen.check.form.FormUpdateCheckScreen
 import com.febiarifin.stuntcare.ui.screen.detail.article.DetailArticleScreen
 import com.febiarifin.stuntcare.ui.screen.detail.check.DetailCheckScreen
 import com.febiarifin.stuntcare.util.UserPreference
-import androidx.lifecycle.lifecycleScope
-import com.febiarifin.stuntcare.ui.screen.auth.GoogleAuthUiClient
-import kotlinx.coroutines.coroutineScope
 
 
 @Composable
@@ -136,7 +126,29 @@ fun BottomNavGraph(navController: NavHostController) {
             val id = it.arguments?.getLong("checkId") ?: -1L
             DetailCheckScreen(
                 checkId = id,
-                navigateToBack = { navController.navigateUp() }
+                navigateToBack = { navController.navigateUp() },
+                navigateToUpdate = {checkId ->
+                    navController.navigate(BottomBarScreen.UpdateCheck.createRoute(checkId)){
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                navigateToCopy = {checkId ->
+                    navController.navigate(BottomBarScreen.CopyCheck.createRoute(checkId)){
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             )
         }
         composable(route = BottomBarScreen.FormCheck.route) {
@@ -174,6 +186,73 @@ fun BottomNavGraph(navController: NavHostController) {
             DetailArticleScreen(
                 articleId = id,
                 navigateToBack = { navController.navigateUp() }
+            )
+        }
+        composable(
+            route = BottomBarScreen.UpdateCheck.route,
+            arguments = listOf(navArgument("checkId") { type = NavType.LongType }),
+        ) {
+            val id = it.arguments?.getLong("checkId") ?: -1L
+
+            FormUpdateCheckScreen(
+                navigateToBack = { navController.navigateUp() },
+                navigateToCheck = {
+                    navController.navigate(BottomBarScreen.Check.route) {
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                navigateToDetailCheck = { checkId ->
+                    navController.navigate(BottomBarScreen.DetailCheck.createRoute(checkId)){
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                checkId = id,
+            )
+        }
+
+        composable(
+            route = BottomBarScreen.CopyCheck.route,
+            arguments = listOf(navArgument("checkId") { type = NavType.LongType }),
+        ) {
+            val id = it.arguments?.getLong("checkId") ?: -1L
+
+            FormCopyCheckScreen(
+                navigateToBack = { navController.navigateUp() },
+                navigateToCheck = {
+                    navController.navigate(BottomBarScreen.Check.route) {
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                navigateToDetailCheck = { checkId ->
+                    navController.navigate(BottomBarScreen.DetailCheck.createRoute(checkId)){
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                checkId = id,
             )
         }
     }

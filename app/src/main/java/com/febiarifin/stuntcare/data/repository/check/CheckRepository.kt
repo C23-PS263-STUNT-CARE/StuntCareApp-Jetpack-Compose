@@ -1,6 +1,7 @@
 package com.febiarifin.stuntcare.data.repository.check
 
 import com.febiarifin.stuntcare.data.remote.response.CheckResponse
+import com.febiarifin.stuntcare.data.remote.response.DeleteResponse
 import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.util.Result
 import kotlinx.coroutines.flow.Flow
@@ -23,5 +24,21 @@ interface CheckRepository {
         bodyLength: Double,
         asiEksklusif: String
     ): Flow<Result<CheckResponse>>
+
+    fun updateStunting(
+        token: String,
+        userId: String,
+        checkId: Int,
+        name: String,
+        sex: String,
+        age: Int,
+        birthWeight: Double,
+        birthLength: Double,
+        bodyWeight: Double,
+        bodyLength: Double,
+        asiEksklusif: String
+    ): Flow<Result<CheckResponse>>
+
+    fun deleteStuntingById(token: String, userId: String, checkId: Int): Flow<Result<DeleteResponse>>
 
 }

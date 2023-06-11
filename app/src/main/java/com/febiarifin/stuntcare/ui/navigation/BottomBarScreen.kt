@@ -40,6 +40,14 @@ sealed class BottomBarScreen(
         fun createRoute(checkId: Long) = "check/$checkId"
     }
 
+    object UpdateCheck: BottomBarScreen("update/{checkId}"){
+        fun createRoute(checkId: Long) = "update/$checkId"
+    }
+
+    object CopyCheck: BottomBarScreen("copy/{checkId}"){
+        fun createRoute(checkId: Long) = "copy/$checkId"
+    }
+
     object FormCheck: BottomBarScreen("formcheck"){
         fun createRoute() = "formcheck"
     }

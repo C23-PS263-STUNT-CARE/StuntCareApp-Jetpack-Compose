@@ -49,4 +49,28 @@ class DetailCheckViewModel @Inject constructor(
         }
     }
 
+    fun deleteStuntingById(token: String, userId: String, checkId: Int){
+        viewModelScope.launch {
+            checkRepository.deleteStuntingById(token, userId, checkId).collect{ result ->
+                when(result){
+                    is Result.Loading -> {
+                        _state.update {
+                            it.copy(loading = true)
+                        }
+                    }
+                    is Result.Error -> {
+                        _state.update {
+                            it.copy(loading = false, errorMessage = result.message)
+                        }
+                    }
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(data = null, loading = false)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

@@ -67,12 +67,13 @@ import com.febiarifin.stuntcare.util.UserPreference
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormCheckScreen(
+fun FormUpdateCheckScreen(
     modifier: Modifier = Modifier,
     navigateToBack: () -> Unit,
     viewModel: FormCheckViewModel = hiltViewModel(),
     navigateToDetailCheck: (Long) -> Unit,
     navigateToCheck: () -> Unit,
+    checkId: Long,
 ) {
     val context = LocalContext.current
     val userPreference = UserPreference(context)
@@ -92,13 +93,35 @@ fun FormCheckScreen(
     var showProgressBar by remember { mutableStateOf(false) }
     var showSuccessDialog by remember { mutableStateOf(false) }
     var stuntingResult by remember { mutableStateOf(false) }
+    var getStunting by remember { mutableStateOf(true) }
+
+    if (getStunting){
+        viewModel.getStuntingById(
+            "Bearer " + userPreference.getUserToken().toString(),
+            userPreference.getUserId().toString(),
+            checkId.toInt()
+        )
+    }
+
+    val check = state.data?.data
+
+    if (check != null) {
+        name = check.name
+        selectedGender = check.sex
+        selectedASI = check.asi_eksklusif
+        age = check.age.toString()
+        birth_weight = check.birth_weight.toString()
+        birth_length = check.birth_length.toString()
+        body_weight = check.body_weight.toString()
+        body_length = check.body_length.toString()
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Form Check Stunting",
+                        text = "Edit Check Stunting",
                         color = Color.Black,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -235,12 +258,12 @@ fun FormCheckScreen(
                     Row(
                         modifier = Modifier.padding(top = 8.dp)
                     ) {
-                        RadioButtonOption(
+                        RadioButtonOptionUpdate(
                             text = "Laki-laki",
                             selected = selectedGender == "M",
                             onSelected = { selectedGender = "M" }
                         )
-                        RadioButtonOption(
+                        RadioButtonOptionUpdate(
                             text = "Perempuan",
                             selected = selectedGender == "F",
                             onSelected = { selectedGender = "F" }
@@ -256,12 +279,12 @@ fun FormCheckScreen(
                     Row(
                         modifier = Modifier.padding(top = 8.dp)
                     ) {
-                        RadioButtonOption(
+                        RadioButtonOptionUpdate(
                             text = "Ya",
                             selected = selectedASI == "Yes",
                             onSelected = { selectedASI = "Yes" }
                         )
-                        RadioButtonOption(
+                        RadioButtonOptionUpdate(
                             text = "Tidak",
                             selected = selectedASI == "No",
                             onSelected = { selectedASI = "No" }
@@ -272,12 +295,14 @@ fun FormCheckScreen(
                 Button(
                     onClick = {
                         if (name.isNotEmpty() && age.isNotEmpty() && birth_weight.isNotEmpty() && birth_length.isNotEmpty() && body_weight.isNotEmpty() && body_length.isNotEmpty() && selectedGender.isNotEmpty() && selectedASI.isNotEmpty()) {
+                            getStunting = false
                             showError = false
                             isFormCheckCompleted = true
-                            viewModel.onEvent(
-                                FormCheckEvent.OnCheckStunting(
+                            viewModel.onEventUpdate(
+                                FormCheckUpdateEvent.OnUpdateStunting(
                                     "Bearer " + userPreference.getUserToken().toString(),
                                     userPreference.getUserId().toString(),
+                                    checkId.toInt(),
                                     name,
                                     selectedGender,
                                     age.toInt(),
@@ -327,27 +352,13 @@ fun FormCheckScreen(
                         showSuccessDialog = true
                     }
                 }
-                if (state.data?.error == true) {
-                    Toast.makeText(context, state.data?.message.toString(), Toast.LENGTH_SHORT)
-                        .show()
-                }
-                state.errorMessage?.let {
-                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                }
+
             }
+
             ShowProgressBar(showProgressBar)
             Spacer(modifier = modifier.height(20.dp))
 
-            if (showSuccessDialog && showProgressBar == false) {
-                name = ""
-                age = ""
-                birth_weight = ""
-                birth_length = ""
-                body_weight = ""
-                body_length = ""
-                selectedGender = ""
-                selectedASI = ""
-
+            if (showSuccessDialog && showProgressBar == false && getStunting == false) {
                 AlertDialog(
                     onDismissRequest = {
                         showSuccessDialog = false
@@ -395,7 +406,7 @@ fun FormCheckScreen(
                                 .clickable(onClick = {
                                     showSuccessDialog = false
                                     stuntingResult = false
-                                    navigateToDetailCheck(state.data?.data?.id!!.toLong())
+                                    navigateToDetailCheck(checkId)
                                 }),
                             contentAlignment = Alignment.Center,
                         ) {
@@ -415,7 +426,7 @@ fun FormCheckScreen(
                                 .background(Color.Blue.copy(alpha = 0.2f))
                                 .clickable(onClick = {
                                     showSuccessDialog = false
-                                    stuntingResult = false
+                                    getStunting = false
                                     navigateToCheck()
                                 }),
                             contentAlignment = Alignment.Center,
@@ -431,7 +442,7 @@ fun FormCheckScreen(
 }
 
 @Composable
-fun RadioButtonOption(
+fun RadioButtonOptionUpdate(
     text: String,
     selected: Boolean,
     onSelected: () -> Unit
@@ -454,12 +465,13 @@ fun RadioButtonOption(
 
 @Preview
 @Composable
-fun FormCheckScreeenPreview() {
+fun FormUpdateCheckScreeenPreview() {
     StuntCareTheme {
-        FormCheckScreen(
+        FormUpdateCheckScreen(
             navigateToBack = {},
             navigateToDetailCheck = {},
             navigateToCheck = {},
+            checkId = 1,
         )
     }
 }

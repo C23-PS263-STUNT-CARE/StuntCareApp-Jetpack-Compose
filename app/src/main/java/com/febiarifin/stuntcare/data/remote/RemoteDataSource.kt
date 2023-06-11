@@ -2,6 +2,7 @@ package com.febiarifin.stuntcare.data.remote
 
 import com.febiarifin.stuntcare.data.remote.response.CheckHistoryResponse
 import com.febiarifin.stuntcare.data.remote.response.CheckResponse
+import com.febiarifin.stuntcare.data.remote.response.DeleteResponse
 import com.febiarifin.stuntcare.data.remote.response.LoginResponse
 import com.febiarifin.stuntcare.data.remote.response.RegisterResponse
 import com.febiarifin.stuntcare.data.remote.retrofit.ApiService
@@ -31,6 +32,14 @@ class RemoteDataSource @Inject constructor(
 
     suspend fun checkStunting(token: String,userId: String, name: String, sex: String, age: Int, birthWeight: Double, birthLength: Double, bodyWeight: Double, bodyLength: Double, asiEksklusif: String): CheckResponse{
         return apiService.checkStunting(token,userId, name, sex, age, birthWeight, birthLength, bodyWeight, bodyLength, asiEksklusif)
+    }
+
+    suspend fun deleteStuntingById(token: String, userId: String, checkId: Int): DeleteResponse{
+        return apiService.deleteStuntingById(token, userId, checkId)
+    }
+
+    suspend fun updateStunting(token: String,userId: String,checkId: Int, name: String, sex: String, age: Int, birthWeight: Double, birthLength: Double, bodyWeight: Double, bodyLength: Double, asiEksklusif: String): CheckResponse{
+        return apiService.updateStunting(token,userId, checkId ,name, sex, age, birthWeight, birthLength, bodyWeight, bodyLength, asiEksklusif)
     }
 
 }

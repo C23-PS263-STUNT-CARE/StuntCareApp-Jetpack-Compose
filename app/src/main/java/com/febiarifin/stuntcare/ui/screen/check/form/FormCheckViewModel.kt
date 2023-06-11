@@ -29,6 +29,14 @@ class FormCheckViewModel @Inject constructor(
         }
     }
 
+    fun onEventUpdate(event: FormCheckUpdateEvent){
+        when(event){
+            is FormCheckUpdateEvent.OnUpdateStunting -> {
+                updateStunting(event.token,event.userId, event.checkId,event.name, event.sex,event.age, event.birth_weight, event.birth_length, event.body_weight, event.body_length, event.asi_ekslusif)
+            }
+        }
+    }
+
     fun checkStunting(
         token: String,
         userId: String,
@@ -52,6 +60,66 @@ class FormCheckViewModel @Inject constructor(
                     is Result.Error -> {
                         _state.update {
                             it.copy(errorMessage = result.message, loading = false)
+                        }
+                    }
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(data = result.data, loading = false)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateStunting(
+        token: String,
+        userId: String,
+        checkId: Int,
+        name: String,
+        sex: String,
+        age: Int,
+        birthWeight: Double,
+        birthLength: Double,
+        bodyWeight: Double,
+        bodyLength: Double,
+        asiEksklusif: String
+    ){
+        viewModelScope.launch {
+            checkRepository.updateStunting(token,userId,checkId, name, sex, age, birthWeight, birthLength, bodyWeight, bodyLength, asiEksklusif).collect{ result ->
+                when(result){
+                    is Result.Loading -> {
+                        _state.update {
+                            it.copy(loading = true)
+                        }
+                    }
+                    is Result.Error -> {
+                        _state.update {
+                            it.copy(errorMessage = result.message, loading = false)
+                        }
+                    }
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(data = result.data, loading = false)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun getStuntingById(token: String, userId: String, checkId: Int){
+        viewModelScope.launch {
+            checkRepository.getStuntingById(token, userId, checkId).collect{ result ->
+                when(result){
+                    is Result.Loading -> {
+                        _state.update {
+                            it.copy(loading = true)
+                        }
+                    }
+                    is Result.Error -> {
+                        _state.update {
+                            it.copy(loading = false, errorMessage = result.message)
                         }
                     }
                     is Result.Success -> {
