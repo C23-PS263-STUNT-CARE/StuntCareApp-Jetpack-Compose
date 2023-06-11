@@ -1,6 +1,16 @@
 # StuntCare Made by Jetpack Compose
 
-## Preview
+# About 
+Stunting-Detection-App-StuntCare
+StuntCare : Application for detecting the stunting by characteristics
+
+## Technologies ##
+Project is created with:
+*  Android Studio
+*  Android Jetpack 
+*  Kotlin
+
+# Design UI Preview
 
 <table>
    <tr>
