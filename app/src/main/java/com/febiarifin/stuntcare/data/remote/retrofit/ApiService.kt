@@ -35,6 +35,13 @@ interface ApiService {
         @Path("userId") userId: String,
     ): CheckHistoryResponse
 
+    @GET(Constants.CHECK_HISTORY_BY_ID)
+    suspend fun getStuntingById(
+        @Header("Authorization") token: String,
+        @Path("userId") userId: String,
+        @Path("checkId") checkId: Int,
+    ): CheckResponse
+
     @FormUrlEncoded
     @POST(Constants.CHECK_POST)
     suspend fun checkStunting(

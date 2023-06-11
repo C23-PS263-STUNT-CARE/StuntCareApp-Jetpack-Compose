@@ -25,6 +25,10 @@ class RemoteDataSource @Inject constructor(
         return apiService.getAllCheckHistory(token, userId)
     }
 
+    suspend fun getStuntingById(token: String, userId: String, checkId: Int): CheckResponse{
+        return apiService.getStuntingById(token, userId, checkId)
+    }
+
     suspend fun checkStunting(token: String,userId: String, name: String, sex: String, age: Int, birthWeight: Double, birthLength: Double, bodyWeight: Double, bodyLength: Double, asiEksklusif: String): CheckResponse{
         return apiService.checkStunting(token,userId, name, sex, age, birthWeight, birthLength, bodyWeight, bodyLength, asiEksklusif)
     }

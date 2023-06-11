@@ -9,6 +9,8 @@ interface CheckRepository {
 
     fun getAllCheckHistory(token: String, userId: String): Flow<Result<List<Check>>>
 
+    fun getStuntingById(token: String, userId: String, checkId: Int): Flow<Result<CheckResponse>>
+
     fun checkStunting(
         token: String,
         userId: String,

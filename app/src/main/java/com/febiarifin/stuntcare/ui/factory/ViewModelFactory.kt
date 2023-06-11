@@ -16,9 +16,10 @@ class ViewModelFactory(private val repository: Repository) :
 //        if (modelClass.isAssignableFrom(CheckViewModel::class.java)){
 //            return CheckViewModel(repository) as T
 //        }else
-        if (modelClass.isAssignableFrom(DetailCheckViewModel::class.java)) {
-            return DetailCheckViewModel(repository) as T
-        } else if (modelClass.isAssignableFrom(EducationViewModel::class.java)) {
+//        if (modelClass.isAssignableFrom(DetailCheckViewModel::class.java)) {
+//            return DetailCheckViewModel(repository) as T
+//        } else
+        if (modelClass.isAssignableFrom(EducationViewModel::class.java)) {
             return EducationViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(DetailArticleViewModel::class.java)) {
             return DetailArticleViewModel(repository) as T

@@ -111,7 +111,9 @@ fun CheckScreen(
             navigateToDetailCheck = navigateToDetailCheck,
             navigateToFormCheck = navigateToFormCheck,
         )
-        ShowProgressBar(state = state.loading, isFillMaxSize = true)
+        if (state.data == null){
+            ShowProgressBar(state = true, isFillMaxSize = true)
+        }
     }
 }
 

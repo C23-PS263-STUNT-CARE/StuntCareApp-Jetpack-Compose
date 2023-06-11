@@ -26,6 +26,22 @@ class CheckRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getStuntingById(
+        token: String,
+        userId: String,
+        checkId: Int
+    ): Flow<Result<CheckResponse>> {
+        return flow {
+            emit(Result.Loading())
+            try{
+                val response = remoteDataSource.getStuntingById(token, userId, checkId)
+                emit(Result.Success(response))
+            }catch (e: Exception){
+                emit(Result.Error("Terjadi Kesalahan"))
+            }
+        }
+    }
+
     override fun checkStunting(
         token: String,
         userId: String,
