@@ -9,7 +9,7 @@ data class Check(
     val birth_length: Double,
     val body_weight: Double,
     val body_length: Double,
-    val asi_ekslusif: String,
+    val asi_eksklusif: String,
     val status_stunting: Double,
 )
 

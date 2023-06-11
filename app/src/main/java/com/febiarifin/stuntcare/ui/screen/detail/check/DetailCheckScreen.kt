@@ -1,6 +1,7 @@
 package com.febiarifin.stuntcare.ui.screen.detail.check
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -325,12 +326,12 @@ fun DetailCheckContent(
                         Card(
                             modifier = Modifier,
                             colors = CardDefaults.cardColors(
-                                if (check.asi_ekslusif == "Yes") Color.Green.copy(
+                                if (check.asi_eksklusif == "Yes") Color.Green.copy(
                                     alpha = 0.5f
                                 ) else Color.Red.copy(alpha = 0.5f)
                             ),
                             content = {
-                                CustomText(text = if (check.asi_ekslusif == "Yes") "YA" else "TIDAK", isBold = true)
+                                CustomText(text = if (check.asi_eksklusif == "Yes") "YA" else "TIDAK", isBold = true)
                             }
                         )
                     }

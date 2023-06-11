@@ -70,6 +70,8 @@ fun FormCheckScreen(
     modifier: Modifier = Modifier,
     navigateToBack: () -> Unit,
     viewModel: FormCheckViewModel = hiltViewModel(),
+    navigateToDetailCheck: (Long) -> Unit,
+    navigateToCheck: () -> Unit,
 ) {
     val context = LocalContext.current
     val userPreference = UserPreference(context)
@@ -120,7 +122,6 @@ fun FormCheckScreen(
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = modifier.height(60.dp))
-
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
@@ -314,14 +315,6 @@ fun FormCheckScreen(
             LaunchedEffect(key1 = state.loading) {
                 showProgressBar = state.loading
                 if (state.data?.error == false) {
-                    name = ""
-                    age = ""
-                    birth_weight = ""
-                    birth_length = ""
-                    body_weight = ""
-                    body_length = ""
-                    selectedGender = ""
-                    selectedASI = ""
                     val data = state.data?.data
                     val result = data?.status_stunting
                     if (result != null) {
@@ -332,7 +325,6 @@ fun FormCheckScreen(
                         }
                         showSuccessDialog = true
                     }
-                    Log.d("TEST", data?.status_stunting.toString())
                 }
                 if (state.data?.error == true) {
                     Toast.makeText(context, state.data?.message.toString(), Toast.LENGTH_SHORT)
@@ -342,10 +334,19 @@ fun FormCheckScreen(
                     Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                 }
             }
-
             ShowProgressBar(showProgressBar)
+            Spacer(modifier = modifier.height(20.dp))
 
-            if (showSuccessDialog) {
+            if (showSuccessDialog && showProgressBar == false) {
+                name = ""
+                age = ""
+                birth_weight = ""
+                birth_length = ""
+                body_weight = ""
+                body_length = ""
+                selectedGender = ""
+                selectedASI = ""
+
                 AlertDialog(
                     onDismissRequest = {
                         showSuccessDialog = false
@@ -393,6 +394,13 @@ fun FormCheckScreen(
                                 .clickable(onClick = {
                                     showSuccessDialog = false
                                     stuntingResult = false
+                                    if (state.data != null){
+                                        if (state.data?.data != null){
+                                           if (state.data?.data?.id != null){
+                                               navigateToDetailCheck(state.data?.data?.id!!.toLong())
+                                           }
+                                        }
+                                    }
                                 }),
                             contentAlignment = Alignment.Center,
                         ) {
@@ -413,6 +421,7 @@ fun FormCheckScreen(
                                 .clickable(onClick = {
                                     showSuccessDialog = false
                                     stuntingResult = false
+                                    navigateToCheck()
                                 }),
                             contentAlignment = Alignment.Center,
                         ) {
@@ -420,196 +429,8 @@ fun FormCheckScreen(
                         }
                     },
                 )
-            }
 
-            Spacer(modifier = modifier.height(20.dp))
-        }
-    }
-}
-
-@Composable
-fun CheckForm() {
-    val colorPrimary: Color = Color(0xFF3984E9)
-    var name by remember { mutableStateOf("") }
-    var age by remember { mutableStateOf("") }
-    var birth_weight by remember { mutableStateOf("") }
-    var birth_length by remember { mutableStateOf("") }
-    var body_length by remember { mutableStateOf("") }
-    var body_weight by remember { mutableStateOf("") }
-    var selectedGender by remember { mutableStateOf("") }
-    var selectedASI by remember { mutableStateOf("") }
-    var showError by remember { mutableStateOf(false) }
-    var isFormCheckCompleted by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { androidx.compose.material.Text("Nama Anak", fontSize = 16.sp) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorPrimary,
-                focusedLabelColor = colorPrimary,
-                cursorColor = colorPrimary,
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text
-            )
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = age,
-            onValueChange = { age = it },
-            label = { androidx.compose.material.Text("Umur Anak (Bulan)", fontSize = 16.sp) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorPrimary,
-                focusedLabelColor = colorPrimary,
-                cursorColor = colorPrimary,
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = birth_weight,
-            onValueChange = { birth_weight = it },
-            label = { androidx.compose.material.Text("Berat Lahir Anak (Kg)", fontSize = 16.sp) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorPrimary,
-                focusedLabelColor = colorPrimary,
-                cursorColor = colorPrimary,
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = birth_length,
-            onValueChange = { birth_length = it },
-            label = { androidx.compose.material.Text("Tinggi Lahir Anak (Cm)", fontSize = 16.sp) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorPrimary,
-                focusedLabelColor = colorPrimary,
-                cursorColor = colorPrimary,
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = body_weight,
-            onValueChange = { body_weight = it },
-            label = { androidx.compose.material.Text("Berat Badan Anak(Kg)", fontSize = 16.sp) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorPrimary,
-                focusedLabelColor = colorPrimary,
-                cursorColor = colorPrimary,
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = body_length,
-            onValueChange = { body_length = it },
-            label = { androidx.compose.material.Text("Tinggi Badan Anak(Cm)", fontSize = 16.sp) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorPrimary,
-                focusedLabelColor = colorPrimary,
-                cursorColor = colorPrimary,
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            Text(text = "Pilih Jenis Kelamin", fontWeight = FontWeight.Bold)
-            Row(
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                RadioButtonOption(
-                    text = "Laki-laki",
-                    selected = selectedGender == "M",
-                    onSelected = { selectedGender = "M" }
-                )
-                RadioButtonOption(
-                    text = "Perempuan",
-                    selected = selectedGender == "F",
-                    onSelected = { selectedGender = "F" }
-                )
             }
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            Text(text = "ASI Ekslusif", fontWeight = FontWeight.Bold)
-            Row(
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                RadioButtonOption(
-                    text = "Ya",
-                    selected = selectedASI == "Yes",
-                    onSelected = { selectedASI = "Yes" }
-                )
-                RadioButtonOption(
-                    text = "Tidak",
-                    selected = selectedASI == "No",
-                    onSelected = { selectedASI = "No" }
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        Button(
-            onClick = {
-                if (name.isNotEmpty() && age.isNotEmpty() && birth_weight.isNotEmpty() && birth_length.isNotEmpty() && body_weight.isNotEmpty() && body_length.isNotEmpty() && selectedGender.isNotEmpty() && selectedASI.isNotEmpty()) {
-                    showError = false
-                    isFormCheckCompleted = true
-                } else {
-                    showError = true
-                    isFormCheckCompleted = false
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(backgroundColor = colorPrimary),
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Text(
-                text = "Cek Status Stunting",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        if (showError) {
-            ShowSnackBar(message = "Pastikan Semua Field Terisi")
-        } else if (isFormCheckCompleted) {
-            isFormCheckCompleted = false
-            Log.d("TEST", "Success")
-            ShowSnackBar(message = "Semua Field Terisi " + name + "JK " + selectedGender + " ASI" + selectedASI)
         }
     }
 }
@@ -641,7 +462,9 @@ fun RadioButtonOption(
 fun FormCheckScreeenPreview() {
     StuntCareTheme {
         FormCheckScreen(
-            navigateToBack = {}
+            navigateToBack = {},
+            navigateToDetailCheck = {},
+            navigateToCheck = {}
         )
     }
 }

@@ -42,7 +42,7 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = if (userPreference.getUserToken() != null) BottomBarScreen.Home.route else BottomBarScreen.Login.route
     ) {
         composable(route = BottomBarScreen.Login.route) {
-            
+
             LoginScreen(
                 navigateToRegister = {
                     navController.navigate(BottomBarScreen.Register.createRoute()) {
@@ -141,7 +141,29 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarScreen.FormCheck.route) {
             FormCheckScreen(
-                navigateToBack = { navController.navigateUp() }
+                navigateToBack = { navController.navigateUp() },
+                navigateToCheck = {
+                    navController.navigate(BottomBarScreen.Check.route) {
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                navigateToDetailCheck = { checkId ->
+                    navController.navigate(BottomBarScreen.DetailCheck.createRoute(checkId)){
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
             )
         }
         composable(
