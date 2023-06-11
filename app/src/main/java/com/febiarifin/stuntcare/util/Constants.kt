@@ -7,4 +7,5 @@ object Constants {
     const val CHECK_POST = "v1/cek/{userId}"
     const val CHECK_HISTORY = "v1/history/{userId}"
     const val CHECK_GET_UPDATE_DELETE = "v1/stunting/{userId}/{checkId}"
+    const val GET_INFO = "v1/info"
 }

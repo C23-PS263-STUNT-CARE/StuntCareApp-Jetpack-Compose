@@ -3,6 +3,7 @@ package com.febiarifin.stuntcare.data.remote.retrofit
 import com.febiarifin.stuntcare.data.remote.response.CheckHistoryResponse
 import com.febiarifin.stuntcare.data.remote.response.CheckResponse
 import com.febiarifin.stuntcare.data.remote.response.DeleteResponse
+import com.febiarifin.stuntcare.data.remote.response.InfoResponse
 import com.febiarifin.stuntcare.data.remote.response.LoginResponse
 import com.febiarifin.stuntcare.data.remote.response.RegisterResponse
 import com.febiarifin.stuntcare.util.Constants
@@ -81,5 +82,10 @@ interface ApiService {
         @Field("body_length") bodyLength: Double,
         @Field("asi_eksklusif") asiEksklusif: String,
     ): CheckResponse
+
+    @GET(Constants.GET_INFO)
+    suspend fun getAllInfo(
+        @Header("Authorization") token: String,
+    ): InfoResponse
 
 }

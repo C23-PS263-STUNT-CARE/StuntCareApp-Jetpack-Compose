@@ -23,9 +23,10 @@ class ViewModelFactory(private val repository: Repository) :
             return EducationViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(DetailArticleViewModel::class.java)) {
             return DetailArticleViewModel(repository) as T
-        } else if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(repository) as T
         }
+//        else if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+//            return HomeViewModel(repository) as T
+//        }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 }

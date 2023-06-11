@@ -1,4 +1,7 @@
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -50,12 +54,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.model.Article
+import com.febiarifin.stuntcare.model.Info
 import com.febiarifin.stuntcare.model.dummyArticle
 import com.febiarifin.stuntcare.model.dummyBanner
 import com.febiarifin.stuntcare.ui.components.BottomSheetProfileLayout
+import com.febiarifin.stuntcare.ui.components.ShowProgressBar
+import com.febiarifin.stuntcare.ui.screen.home.HomeViewModel
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 import com.febiarifin.stuntcare.util.UserPreference
 
@@ -65,16 +76,18 @@ import com.febiarifin.stuntcare.util.UserPreference
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToFormCheck: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val userPreference = UserPreference(context)
+    val stateInfo by viewModel.stateInfo.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Hai "+ userPreference.getUserName(),
+                        text = "Hai " + userPreference.getUserName(),
                         color = Color.Black,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -97,10 +110,12 @@ fun HomeScreen(
                                 tint = Color.Black
                             )
                         }
-                        Box(modifier = Modifier
-                            .size(5.dp)
-                            .clip(CircleShape)
-                            .background(Color.Red)) {}
+                        Box(
+                            modifier = Modifier
+                                .size(5.dp)
+                                .clip(CircleShape)
+                                .background(Color.Red)
+                        ) {}
                     }
                     Spacer(Modifier.width(10.dp))
                 },
@@ -113,7 +128,7 @@ fun HomeScreen(
     ) {
         Column(
             modifier = Modifier
-                        .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState())
         ) {
             BannerHeader(
                 navigateToFormCheck = navigateToFormCheck
@@ -121,12 +136,20 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(24.dp))
             HomeSection(
                 title = stringResource(R.string.section_banner),
-                content = {BannerRow()}
+                content = {
+                    viewModel.getAllInfo("Bearer " + userPreference.getUserToken().toString())
+                    BannerRow(
+                        listInfo = stateInfo.data
+                    )
+                    if (stateInfo.data == null) {
+                        ShowProgressBar(state = true, isFillMaxSize = true)
+                    }
+                }
             )
             Spacer(modifier = Modifier.height(24.dp))
             HomeSection(
                 title = stringResource(R.string.section_article),
-                content = {   ArticleRow(dummyArticle)}
+                content = { ArticleRow(dummyArticle) }
             )
             Spacer(modifier = Modifier.height(120.dp))
         }
@@ -185,7 +208,7 @@ private fun BannerHeader(
                 Spacer(modifier = modifier.height(8.dp))
                 Button(
                     onClick = { navigateToFormCheck() },
-                    colors =  ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                 ) {
                     Text("Cek Status Stunting")
                 }
@@ -197,16 +220,24 @@ private fun BannerHeader(
 
 @Composable
 private fun BannerRow(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listInfo: List<Info>? = null,
 ) {
+    val context = LocalContext.current
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(25.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
-    ){
-        items(dummyBanner, key = {it.text}){banner->
+    ) {
+        items(listInfo ?: emptyList(), key = { it.id }) { info ->
             BannerItem(
-                banner,
-                modifier = Modifier.clickable{}
+                info,
+                modifier = modifier
+                    .width(300.dp)
+                    .height(120.dp)
+                    .clickable {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(info.url))
+                        context.startActivity(intent)
+                    }
             )
         }
     }
@@ -221,13 +252,15 @@ fun ArticleRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
         modifier = modifier
-    ){
-        items(listArticle, key = {it.id}){ article ->
+    ) {
+        items(listArticle, key = { it.id }) { article ->
             ArticleItem(
                 article,
                 200.dp,
                 120.dp,
-                modifier = Modifier.clickable{}
+                modifier = Modifier.clickable {
+
+                }
             )
         }
     }

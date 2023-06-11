@@ -3,7 +3,9 @@ package com.febiarifin.stuntcare.data.repository.check
 import com.febiarifin.stuntcare.data.remote.RemoteDataSource
 import com.febiarifin.stuntcare.data.remote.response.CheckResponse
 import com.febiarifin.stuntcare.data.remote.response.DeleteResponse
+import com.febiarifin.stuntcare.data.remote.response.InfoResponse
 import com.febiarifin.stuntcare.model.Check
+import com.febiarifin.stuntcare.model.Info
 import com.febiarifin.stuntcare.util.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -111,6 +113,18 @@ class CheckRepositoryImpl @Inject constructor(
             try {
                 val response = remoteDataSource.updateStunting(token, userId, checkId, name, sex, age, birthWeight, birthLength, bodyWeight, bodyLength, asiEksklusif)
                 emit(Result.Success(response))
+            }catch (e: Exception){
+                emit(Result.Error("Terjadi Kesalahan"))
+            }
+        }
+    }
+
+    override fun getAllInfo(token: String): Flow<Result<List<Info>>> {
+        return flow {
+            emit(Result.Loading())
+            try {
+                val response = remoteDataSource.getAllInfo(token)
+                emit(Result.Success(response.data))
             }catch (e: Exception){
                 emit(Result.Error("Terjadi Kesalahan"))
             }

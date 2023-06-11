@@ -3,6 +3,7 @@ package com.febiarifin.stuntcare.data.remote
 import com.febiarifin.stuntcare.data.remote.response.CheckHistoryResponse
 import com.febiarifin.stuntcare.data.remote.response.CheckResponse
 import com.febiarifin.stuntcare.data.remote.response.DeleteResponse
+import com.febiarifin.stuntcare.data.remote.response.InfoResponse
 import com.febiarifin.stuntcare.data.remote.response.LoginResponse
 import com.febiarifin.stuntcare.data.remote.response.RegisterResponse
 import com.febiarifin.stuntcare.data.remote.retrofit.ApiService
@@ -40,6 +41,10 @@ class RemoteDataSource @Inject constructor(
 
     suspend fun updateStunting(token: String,userId: String,checkId: Int, name: String, sex: String, age: Int, birthWeight: Double, birthLength: Double, bodyWeight: Double, bodyLength: Double, asiEksklusif: String): CheckResponse{
         return apiService.updateStunting(token,userId, checkId ,name, sex, age, birthWeight, birthLength, bodyWeight, bodyLength, asiEksklusif)
+    }
+
+    suspend fun getAllInfo(token: String): InfoResponse{
+        return apiService.getAllInfo(token)
     }
 
 }

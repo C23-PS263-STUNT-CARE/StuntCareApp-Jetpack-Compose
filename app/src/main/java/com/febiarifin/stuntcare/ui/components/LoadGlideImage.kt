@@ -25,8 +25,8 @@ fun LoadGlideImage(
             .fillMaxWidth()
     ){
         it
-            .error(R.drawable.no_data)
-            .placeholder(R.drawable.no_data)
+            .error(R.drawable.lazy_load)
+            .placeholder(R.drawable.lazy_load)
             .load(path)
     }
 }
