@@ -67,9 +67,6 @@ private val colorPrimary: Color = Color(0xFF3984E9)
 @Composable
 fun CheckScreen(
     modifier: Modifier = Modifier,
-//    viewModel: CheckViewModel = viewModel(
-//        factory = ViewModelFactory(Injection.provideRepository())
-//    ),
     navigateToDetailCheck: (Long) -> Unit,
     navigateToFormCheck: () -> Unit,
     viewModel: CheckViewModel = hiltViewModel()
@@ -77,8 +74,6 @@ fun CheckScreen(
     val context = LocalContext.current
     val userPreference = UserPreference(context)
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var showProgressBar by remember { mutableStateOf(false) }
-    val listCheck = mutableListOf<Check>()
 
     Scaffold(
         topBar = {
@@ -99,64 +94,37 @@ fun CheckScreen(
             )
         },
         floatingActionButton = {
-            FloatingButton {
-                navigateToFormCheck()
-            }
+           if (!state.data.isNullOrEmpty()){
+               FloatingButton {
+                   navigateToFormCheck()
+               }
+           }
         }
     ) {
-//        viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
-//            when(uiState){
-//                is UiState.Loading -> {
-//                    viewModel.getAllCheck()
-//                }
-//                is UiState.Success -> {
-//                    CheckList(
-//                        uiState.data,
-//                        navigateToDetailCheck = navigateToDetailCheck,
-//                        navigateToFormCheck = navigateToFormCheck,
-//                    )
-//                }
-//                is UiState.Error -> {}
-//            }
-//        }
         viewModel.getAllCheckHistory(
             "Bearer " + userPreference.getUserToken().toString(),
             userPreference.getUserId().toString()
         )
 
-        LaunchedEffect(key1 = state.loading) {
-            showProgressBar = state.loading
-            val data = state.data
-            Toast.makeText(context, state.loading.toString(), Toast.LENGTH_LONG).show()
-            if (state.data != null) {
-                data?.forEach { check ->
-                    listCheck.add(check)
-                }
-            }
-            state.errorMessage?.let {
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-            }
-        }
-
         CheckList(
-            if(listCheck.isEmpty()) listOf() else listCheck,
+            state.data,
             navigateToDetailCheck = navigateToDetailCheck,
             navigateToFormCheck = navigateToFormCheck,
         )
-        ShowProgressBar(state = showProgressBar)
+        ShowProgressBar(state = state.loading, isFillMaxSize = true)
     }
 }
 
 @Composable
 fun CheckList(
-    listCheck: List<Check>,
+    listCheck: List<Check>? = null,
     modifier: Modifier = Modifier,
     navigateToDetailCheck: (Long) -> Unit,
     navigateToFormCheck: () -> Unit,
 ) {
     Column {
         Spacer(modifier = Modifier.height(60.dp))
-        if (listCheck.isEmpty()) {
+        if (listCheck.isNullOrEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -232,7 +200,7 @@ fun CheckList(
 fun FloatingButton(onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .padding(bottom = 80.dp, end = 16.dp)
+            .padding(bottom = 80.dp)
             .fillMaxSize(),
         contentAlignment = Alignment.BottomEnd
     ) {
