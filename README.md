@@ -13,6 +13,11 @@ Project is created with:
 # Design UI Preview
 
 <table>
+<tr>
+      <td><img src="screenshots/splash_1.jpeg" width="200px" align="center"></td>
+      <td><img src="screenshots/splash_2.jpeg" width="200px" align="center"></td>
+      <td><img src="screenshots/splash_3.jpeg" width="200px" align="center"></td>
+   </tr>
    <tr>
       <td><img src="screenshots/login.jpeg" width="200px" align="center"></td>
       <td><img src="screenshots/register.jpeg" width="200px" align="center"></td>
