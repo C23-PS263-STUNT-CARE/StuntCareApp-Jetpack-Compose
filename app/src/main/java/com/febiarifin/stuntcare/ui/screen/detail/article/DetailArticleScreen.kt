@@ -1,7 +1,6 @@
 package com.febiarifin.stuntcare.ui.screen.detail.article
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -27,12 +26,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -41,24 +40,28 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.febiarifin.stuntcare.di.Injection
 import com.febiarifin.stuntcare.model.Article
-import com.febiarifin.stuntcare.ui.common.UiState
-import com.febiarifin.stuntcare.ui.factory.ViewModelFactory
+import com.febiarifin.stuntcare.ui.components.LoadGlideImage
+import com.febiarifin.stuntcare.ui.components.ShowProgressBar
+import com.febiarifin.stuntcare.util.UserPreference
+import de.charlex.compose.HtmlText
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailArticleScreen(
     articleId: Long,
-    viewModel: DetailArticleViewModel = viewModel(
-        factory = ViewModelFactory(Injection.provideRepository())
-    ),
+    viewModel: DetailArticleViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
     navigateToBack: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val userPreference = UserPreference(context)
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -85,93 +88,84 @@ fun DetailArticleScreen(
             )
         },
     ) {
-        viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
-            when (uiState) {
-                is UiState.Loading -> {
-                    viewModel.getArticleById(articleId)
-                }
-
-                is UiState.Success -> {
-                    DetailArticleContent(article = uiState.data)
-                }
-
-                is UiState.Error -> {}
-            }
+        viewModel.getArticleById("Bearer "+ userPreference.getUserToken().toString(), articleId.toInt())
+        if (state.data == null){
+            ShowProgressBar(state = true, isFillMaxSize = true)
         }
+        DetailArticleContent(article = state.data?.data)
     }
 }
 
 @Composable
 fun DetailArticleContent(
-    article: Article,
+    article: Article? = null,
 ) {
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-    ) {
-        Spacer(modifier = Modifier.height(60.dp))
+    if (article != null){
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            Spacer(modifier = Modifier.height(60.dp))
 
-        //        LoadGlideImage(
-        //            path = "https://upload.wikimedia.org/wikipedia/commons/0/0d/Sunrise_di_Bukit_Sikunir.jpg",
-        //            height = 210.dp
-        //        )
-
-        Image(painter = painterResource(article.image), contentDescription = null, modifier = Modifier.height(220.dp))
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = article.title,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Medium,
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        Row{
-            Text(
-                text = buildAnnotatedString {
-                    append("Diposting oleh ")
-                    withStyle(style = SpanStyle(color = Color.Black)) {
-                        append(article.author)
-                    }
-                },
-                fontSize = 14.sp,
-                color = Color.Gray
+            LoadGlideImage(
+                path = article.image_url,
+                height = 210.dp,
             )
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .height(20.dp)
-                    .width(20.dp)
-            ) {
-                Box(modifier = Modifier
-                    .size(5.dp)
-                    .clip(CircleShape)
-                    .background(Color.Black)) {}
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = article.title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Medium,
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Row {
+                Text(
+                    text = buildAnnotatedString {
+                        append("Diposting oleh ")
+                        withStyle(style = SpanStyle(color = Color.Black)) {
+                            append(article.author)
+                        }
+                    },
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(5.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black)
+                    ) {}
+                }
+                Text(
+                    text = buildAnnotatedString {
+                        append("Pada ")
+                        withStyle(style = SpanStyle(color = Color.Black)) {
+                            append(article.published_at)
+                        }
+                    },
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
             }
             Text(
-                text = buildAnnotatedString {
-                    append("Pada ")
-                    withStyle(style = SpanStyle(color = Color.Black)) {
-                        append(article.date)
-                    }
-                },
+                text = "# " + article.label,
                 fontSize = 14.sp,
                 color = Color.Gray
             )
+            Spacer(modifier = Modifier.height(10.dp))
+            Divider(color = Color.Gray, thickness = 1.dp)
+            Spacer(modifier = Modifier.height(20.dp))
+            HtmlText(text = article.content, fontSize = 16.sp, textAlign = TextAlign.Justify)
         }
-        Text(
-            text = "# "+article.label,
-            fontSize = 14.sp,
-            color = Color.Gray
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        Divider(color = Color.Gray, thickness = 1.dp)
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = article.content,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Justify
-        )
     }
 }
 
@@ -181,7 +175,7 @@ fun DetailArticleScreenPreview() {
     StuntCareTheme {
         DetailArticleScreen(
             1,
-            navigateToBack = {}
+            navigateToBack = {},
         )
     }
 }

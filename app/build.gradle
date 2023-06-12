@@ -109,4 +109,7 @@ dependencies {
 
     //Authentication Google Play Services
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
+
+    //Parse Html
+    implementation 'de.charlex.compose:html-text:1.3.1'
 }

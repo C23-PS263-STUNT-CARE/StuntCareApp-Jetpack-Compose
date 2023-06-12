@@ -27,10 +27,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.model.Article
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ArticleItem(
     article: Article,
@@ -52,14 +55,33 @@ fun ArticleItem(
         ),
     ) {
         Column {
-            Image(
-                painter = painterResource(article.image),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
+//            Image(
+//                painter = painterResource(article.image_url),
+//                contentDescription = null,
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(height)
+//            )
+            GlideImage(
+                model = article.image_url,
+                contentDescription = "Image",
+                modifier = modifier
                     .height(height)
-            )
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .border(
+                        1.dp,
+                        shape = RoundedCornerShape(16.dp),
+                        color = Color.Gray.copy(alpha = 0.3f)
+                    ),
+                contentScale = ContentScale.Crop
+            ) {
+                it
+                    .error(R.drawable.lazy_load)
+                    .placeholder(R.drawable.lazy_load)
+                    .load(article.image_url)
+            }
         }
         Column(
             modifier = modifier
@@ -91,7 +113,7 @@ fun ArticleItem(
             )
             Spacer(modifier = modifier.height(4.dp))
             Text(
-                text = article.date,
+                text = article.published_at,
                 fontSize = 12.sp,
                 color = Color.Gray.copy(alpha = 0.8f),
             )
@@ -106,7 +128,7 @@ fun ArticleItemPreview() {
         ArticleItem(
             article = Article(
                 1,
-                R.drawable.article_image_1,
+                "https://storage.googleapis.com/banner-stuntcare/artikel/Ilustrasi-anak-stunting-dengan-anak-tumbuh-normal.jpg",
                 "Lorem ipsum dolor sit amet conse ctetur adipiscing elit",
                 "Lorem",
                 "29 Mei 2023",

@@ -77,6 +77,9 @@ fun BottomNavGraph(navController: NavHostController) {
                         launchSingleTop = true
                         restoreState = true
                     }
+                },
+                navigateToDetailArticle = { articleId ->
+                    navController.navigate(BottomBarScreen.DetailArticle.createRoute(articleId))
                 }
             )
         }

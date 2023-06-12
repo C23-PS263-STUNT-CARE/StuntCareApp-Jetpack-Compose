@@ -1,5 +1,7 @@
 package com.febiarifin.stuntcare.data.remote.retrofit
 
+import com.febiarifin.stuntcare.data.remote.response.ArticleByIdResponse
+import com.febiarifin.stuntcare.data.remote.response.ArticleResponse
 import com.febiarifin.stuntcare.data.remote.response.CheckHistoryResponse
 import com.febiarifin.stuntcare.data.remote.response.CheckResponse
 import com.febiarifin.stuntcare.data.remote.response.DeleteResponse
@@ -88,4 +90,19 @@ interface ApiService {
         @Header("Authorization") token: String,
     ): InfoResponse
 
+    @GET(Constants.GET_ALL_ARTICLE_LATEST)
+    suspend fun getAllArticleLatest(
+        @Header("Authorization") token: String,
+    ): ArticleResponse
+
+    @GET(Constants.GET_ALL_ARTICLE)
+    suspend fun getAllArticle(
+        @Header("Authorization") token: String,
+    ): ArticleResponse
+
+    @GET(Constants.GET_ARTICLE_BY_ID)
+    suspend fun getAllArticleById(
+        @Header("Authorization") token: String,
+        @Path("articleId") articleId: Int,
+    ): ArticleByIdResponse
 }

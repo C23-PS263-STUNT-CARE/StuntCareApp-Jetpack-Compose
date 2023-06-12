@@ -72,11 +72,13 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToFormCheck: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
-    navigateToInfo: () -> Unit
+    navigateToInfo: () -> Unit,
+    navigateToDetailArticle : (Long) -> Unit,
 ) {
     val context = LocalContext.current
     val userPreference = UserPreference(context)
     val stateInfo by viewModel.stateInfo.collectAsStateWithLifecycle()
+    val stateArticle by viewModel.stateArticle.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -137,7 +139,7 @@ fun HomeScreen(
                 content = {
                     viewModel.getAllInfo("Bearer " + userPreference.getUserToken().toString())
                     BannerRow(
-                        listInfo = stateInfo.data
+                        listInfo = stateInfo.data,
                     )
                     if (stateInfo.data == null) {
                         ShowProgressBar(state = true, isFillMaxSize = true)
@@ -147,7 +149,16 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(24.dp))
             HomeSection(
                 title = stringResource(R.string.section_article),
-                content = { ArticleRow(dummyArticle) }
+                content = {
+                    viewModel.getAllArticleLatest("Bearer " + userPreference.getUserToken().toString())
+                    ArticleRow(
+                        listArticle = stateArticle.data,
+                        navigateToDetailArticle = navigateToDetailArticle,
+                    )
+                    if (stateArticle.data == null) {
+                        ShowProgressBar(state = true, isFillMaxSize = true)
+                    }
+                }
             )
             Spacer(modifier = Modifier.height(120.dp))
         }
@@ -243,21 +254,22 @@ private fun BannerRow(
 
 @Composable
 fun ArticleRow(
-    listArticle: List<Article>,
-    modifier: Modifier = Modifier
+    listArticle: List<Article>? = null,
+    modifier: Modifier = Modifier,
+    navigateToDetailArticle : (Long) -> Unit,
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
         modifier = modifier
     ) {
-        items(listArticle, key = { it.id }) { article ->
+        items(listArticle ?: emptyList(), key = { it.id }) { article ->
             ArticleItem(
                 article,
                 200.dp,
                 120.dp,
                 modifier = Modifier.clickable {
-
+                    navigateToDetailArticle(article.id)
                 }
             )
         }
@@ -284,6 +296,6 @@ fun SectionText(
 @Composable
 fun HomeScreenPreview() {
     StuntCareTheme {
-        HomeScreen(navigateToFormCheck = {}, navigateToInfo = {})
+        HomeScreen(navigateToFormCheck = {}, navigateToInfo = {}, navigateToDetailArticle = {})
     }
 }

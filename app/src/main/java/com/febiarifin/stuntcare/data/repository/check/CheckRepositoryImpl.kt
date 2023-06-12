@@ -1,9 +1,11 @@
 package com.febiarifin.stuntcare.data.repository.check
 
 import com.febiarifin.stuntcare.data.remote.RemoteDataSource
+import com.febiarifin.stuntcare.data.remote.response.ArticleByIdResponse
 import com.febiarifin.stuntcare.data.remote.response.CheckResponse
 import com.febiarifin.stuntcare.data.remote.response.DeleteResponse
 import com.febiarifin.stuntcare.data.remote.response.InfoResponse
+import com.febiarifin.stuntcare.model.Article
 import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.model.Info
 import com.febiarifin.stuntcare.util.Result
@@ -131,4 +133,39 @@ class CheckRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getAllArticle(token: String): Flow<Result<List<Article>>> {
+        return flow {
+            emit(Result.Loading())
+            try {
+                val response = remoteDataSource.getAllArticle(token)
+                emit(Result.Success(response.data))
+            }catch (e: Exception){
+                emit(Result.Error("Terjadi Kesalahan"))
+            }
+        }
+    }
+
+    override fun getAllArticleLatest(token: String): Flow<Result<List<Article>>> {
+        return flow {
+            emit(Result.Loading())
+            try {
+                val response = remoteDataSource.getAllArticleLatest(token)
+                emit(Result.Success(response.data))
+            }catch (e: Exception){
+                emit(Result.Error("Terjadi Kesalahan"))
+            }
+        }
+    }
+
+    override fun getArticleById(token: String, articleId: Int): Flow<Result<ArticleByIdResponse>> {
+        return flow {
+            emit(Result.Loading())
+            try {
+                val response = remoteDataSource.getAllArticleById(token, articleId)
+                emit(Result.Success(response))
+            }catch (e: Exception){
+                emit(Result.Error("Terjadi Kesalahan"))
+            }
+        }
+    }
 }

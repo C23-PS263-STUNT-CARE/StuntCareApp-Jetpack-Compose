@@ -2,31 +2,44 @@ package com.febiarifin.stuntcare.ui.screen.education
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.febiarifin.stuntcare.data.repository.Repository
-import com.febiarifin.stuntcare.model.Article
-import com.febiarifin.stuntcare.ui.common.UiState
+import com.febiarifin.stuntcare.data.repository.check.CheckRepository
+import com.febiarifin.stuntcare.ui.screen.home.ArticleState
+import com.febiarifin.stuntcare.util.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EducationViewModel(
-    private val repository: Repository
+@HiltViewModel
+class EducationViewModel @Inject constructor(
+    private val checkRepository: CheckRepository
 ): ViewModel() {
-    private val _uiState: MutableStateFlow<UiState<List<Article>>> =
-        MutableStateFlow(UiState.Loading)
-    val uiState: StateFlow<UiState<List<Article>>>
-        get() = _uiState
+    private val _state = MutableStateFlow(ArticleState())
+    val state = _state.asStateFlow()
 
-    fun getAllArticle() {
+    fun getAllArticle(token: String) {
         viewModelScope.launch {
-            repository.getAllArticle()
-                .catch {
-                    _uiState.value = UiState.Error(it.message.toString())
+            checkRepository.getAllArticle(token).collect{result ->
+                when(result){
+                    is Result.Loading -> {
+                        _state.update {
+                            it.copy(loading = true)
+                        }
+                    }
+                    is Result.Error -> {
+                        _state.update {
+                            it.copy(errorMessage = result.message, loading = false)
+                        }
+                    }
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(data = result.data, loading = false)
+                        }
+                    }
                 }
-                .collect { listArticle ->
-                    _uiState.value = UiState.Success(listArticle)
-                }
+            }
         }
     }
 }

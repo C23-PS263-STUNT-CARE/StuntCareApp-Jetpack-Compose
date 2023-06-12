@@ -18,34 +18,37 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.febiarifin.stuntcare.model.Article
 import com.febiarifin.stuntcare.ui.screen.education.EducationViewModel
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.febiarifin.stuntcare.R
-import com.febiarifin.stuntcare.di.Injection
-import com.febiarifin.stuntcare.ui.common.UiState
-import com.febiarifin.stuntcare.ui.factory.ViewModelFactory
+import com.febiarifin.stuntcare.ui.components.ShowProgressBar
+import com.febiarifin.stuntcare.util.UserPreference
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EducationScreen(
     modifier: Modifier = Modifier,
-    viewModel: EducationViewModel = viewModel(
-        factory = ViewModelFactory(Injection.provideRepository())
-    ),
+    viewModel: EducationViewModel = hiltViewModel(),
     navigateToDetailArticle: (Long) -> Unit
 ) {
+    val context = LocalContext.current
+    val userPreference = UserPreference(context)
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -65,34 +68,26 @@ fun EducationScreen(
             )
         },
     ) {
-        viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
-            when (uiState) {
-                is UiState.Loading -> {
-                    viewModel.getAllArticle()
-                }
-
-                is UiState.Success -> {
-                    EducationArticleList(
-                        listArticle = uiState.data,
-                        navigateToDetailArticle = navigateToDetailArticle
-                    )
-                }
-
-                is UiState.Error -> {}
-            }
+        viewModel.getAllArticle("Bearer " + userPreference.getUserToken().toString())
+        EducationArticleList(
+            listArticle = state.data,
+            navigateToDetailArticle = navigateToDetailArticle
+        )
+        if (state.data == null) {
+            ShowProgressBar(state = true, isFillMaxSize = true)
         }
     }
 }
 
 @Composable
 fun EducationArticleList(
-    listArticle: List<Article>,
+    listArticle: List<Article>? = null,
     modifier: Modifier = Modifier,
     navigateToDetailArticle: (Long) -> Unit,
 ) {
     Column {
         Spacer(modifier = Modifier.height(60.dp))
-        if (listArticle.isEmpty()) {
+        if (listArticle.isNullOrEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -114,7 +109,7 @@ fun EducationArticleList(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = modifier.padding(0.dp, 0.dp, 0.dp, 80.dp)
             ) {
-                items(listArticle, key = { it.id }) { article ->
+                items(listArticle ?: emptyList(), key = { it.id }) { article ->
                     ArticleItem(
                         article,
                         500.dp,

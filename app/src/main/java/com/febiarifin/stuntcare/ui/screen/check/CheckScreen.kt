@@ -28,12 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,11 +46,7 @@ import com.febiarifin.stuntcare.R
 import com.febiarifin.stuntcare.model.Check
 import com.febiarifin.stuntcare.ui.screen.check.CheckViewModel
 import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.febiarifin.stuntcare.di.Injection
-import com.febiarifin.stuntcare.ui.common.UiState
 import com.febiarifin.stuntcare.ui.components.ShowProgressBar
-import com.febiarifin.stuntcare.ui.factory.ViewModelFactory
 import com.febiarifin.stuntcare.util.UserPreference
 
 private val colorPrimary: Color = Color(0xFF3984E9)

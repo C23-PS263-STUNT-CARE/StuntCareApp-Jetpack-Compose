@@ -1,5 +1,7 @@
 package com.febiarifin.stuntcare.data.remote
 
+import com.febiarifin.stuntcare.data.remote.response.ArticleByIdResponse
+import com.febiarifin.stuntcare.data.remote.response.ArticleResponse
 import com.febiarifin.stuntcare.data.remote.response.CheckHistoryResponse
 import com.febiarifin.stuntcare.data.remote.response.CheckResponse
 import com.febiarifin.stuntcare.data.remote.response.DeleteResponse
@@ -47,4 +49,15 @@ class RemoteDataSource @Inject constructor(
         return apiService.getAllInfo(token)
     }
 
+    suspend fun getAllArticleLatest(token: String): ArticleResponse{
+        return apiService.getAllArticleLatest(token)
+    }
+
+    suspend fun getAllArticle(token: String): ArticleResponse{
+        return apiService.getAllArticle(token)
+    }
+
+    suspend fun getAllArticleById(token: String, articleId: Int): ArticleByIdResponse{
+        return apiService.getAllArticleById(token, articleId)
+    }
 }
