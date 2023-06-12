@@ -319,11 +319,7 @@ fun FormCheckScreen(
                     val data = state.data?.data
                     val result = data?.status_stunting
                     if (result != null) {
-                        if (result >= 1.0) {
-                            stuntingResult = true
-                        } else {
-                            stuntingResult = false
-                        }
+                        stuntingResult = result >= 1.0
                         showSuccessDialog = true
                     }
                 }
@@ -338,7 +334,7 @@ fun FormCheckScreen(
             ShowProgressBar(showProgressBar)
             Spacer(modifier = modifier.height(20.dp))
 
-            if (showSuccessDialog && showProgressBar == false) {
+            if (showSuccessDialog && !showProgressBar) {
                 name = ""
                 age = ""
                 birth_weight = ""

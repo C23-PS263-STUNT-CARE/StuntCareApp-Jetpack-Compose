@@ -1,6 +1,4 @@
 import android.annotation.SuppressLint
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -94,11 +92,11 @@ fun CheckScreen(
             )
         },
         floatingActionButton = {
-           if (!state.data.isNullOrEmpty()){
-               FloatingButton {
-                   navigateToFormCheck()
-               }
-           }
+            if (!state.data.isNullOrEmpty()) {
+                FloatingButton {
+                    navigateToFormCheck()
+                }
+            }
         }
     ) {
         viewModel.getAllCheckHistory(
@@ -111,7 +109,7 @@ fun CheckScreen(
             navigateToDetailCheck = navigateToDetailCheck,
             navigateToFormCheck = navigateToFormCheck,
         )
-        if (state.data == null){
+        if (state.data == null) {
             ShowProgressBar(state = true, isFillMaxSize = true)
         }
     }

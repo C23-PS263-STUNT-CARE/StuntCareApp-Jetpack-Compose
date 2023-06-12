@@ -344,11 +344,7 @@ fun FormUpdateCheckScreen(
                     val data = state.data?.data
                     val result = data?.status_stunting
                     if (result != null) {
-                        if (result >= 1.0) {
-                            stuntingResult = true
-                        } else {
-                            stuntingResult = false
-                        }
+                        stuntingResult = result >= 1.0
                         showSuccessDialog = true
                     }
                 }
@@ -358,7 +354,7 @@ fun FormUpdateCheckScreen(
             ShowProgressBar(showProgressBar)
             Spacer(modifier = modifier.height(20.dp))
 
-            if (showSuccessDialog && showProgressBar == false && getStunting == false) {
+            if (showSuccessDialog && !showProgressBar && !getStunting) {
                 AlertDialog(
                     onDismissRequest = {
                         showSuccessDialog = false
