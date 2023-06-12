@@ -216,29 +216,29 @@ fun RegisterScreen(
             )
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Divider(color = Color.Gray, thickness = 1.dp)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-
-            },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-            shape = MaterialTheme.shapes.medium,
-            border = BorderStroke(1.dp, Color.Gray.copy(alpha = 0.2f))
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.google),
-                    contentDescription = "Akun Google",
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .size(20.dp)
-                )
-                Text("Daftar dengan Akun Google")
-            }
-        }
+//        Divider(color = Color.Gray, thickness = 1.dp)
+//        Spacer(modifier = Modifier.height(16.dp))
+//
+//        Button(
+//            onClick = {
+//
+//            },
+//            modifier = Modifier.fillMaxWidth(),
+//            colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+//            shape = MaterialTheme.shapes.medium,
+//            border = BorderStroke(1.dp, Color.Gray.copy(alpha = 0.2f))
+//        ) {
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.google),
+//                    contentDescription = "Akun Google",
+//                    modifier = Modifier
+//                        .padding(end = 8.dp)
+//                        .size(20.dp)
+//                )
+//                Text("Daftar dengan Akun Google")
+//            }
+//        }
         Spacer(modifier = Modifier.height(20.dp))
 
         if (showErrorEmpty) {
