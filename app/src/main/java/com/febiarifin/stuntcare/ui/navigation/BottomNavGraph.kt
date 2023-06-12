@@ -6,6 +6,10 @@ import HomeScreen
 import InfoScreen
 import ProfileScreen
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -20,6 +24,7 @@ import com.febiarifin.stuntcare.ui.screen.check.form.FormCopyCheckScreen
 import com.febiarifin.stuntcare.ui.screen.check.form.FormUpdateCheckScreen
 import com.febiarifin.stuntcare.ui.screen.detail.article.DetailArticleScreen
 import com.febiarifin.stuntcare.ui.screen.detail.check.DetailCheckScreen
+import com.febiarifin.stuntcare.ui.screen.welcome.WelcomeScreen
 import com.febiarifin.stuntcare.util.UserPreference
 
 
@@ -27,10 +32,19 @@ import com.febiarifin.stuntcare.util.UserPreference
 fun BottomNavGraph(navController: NavHostController) {
     val context = LocalContext.current
     val userPreference = UserPreference(context)
+    var startDestination by remember { mutableStateOf("") }
+
+    if (userPreference.getSplashState() == true){
+        startDestination = BottomBarScreen.Welcome.route
+    }else if(userPreference.getUserToken() != null){
+        startDestination = BottomBarScreen.Home.route
+    }else{
+        startDestination = BottomBarScreen.Login.route
+    }
 
     NavHost(
         navController = navController,
-        startDestination = if (userPreference.getUserToken() != null) BottomBarScreen.Home.route else BottomBarScreen.Login.route
+        startDestination = startDestination
     ) {
         composable(route = BottomBarScreen.Login.route) {
 
@@ -284,6 +298,10 @@ fun BottomNavGraph(navController: NavHostController) {
             InfoScreen(
                navigateToBack = { navController.navigateUp() }
             )
+        }
+
+        composable(route = BottomBarScreen.Welcome.route) {
+            WelcomeScreen(navController = navController)
         }
     }
 }

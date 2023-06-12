@@ -10,6 +10,7 @@ class UserPreference(context: Context) {
         private const val USER_ID = "user_id"
         private const val TOKEN = "token"
         private const val EMAIL = "email"
+        private const val SPLASH = "splash"
     }
 
     private val preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -20,6 +21,12 @@ class UserPreference(context: Context) {
         editor.putString(USER_ID, value.id)
         editor.putString(TOKEN, value.token)
         editor.putString(EMAIL, value.email)
+        editor.apply()
+    }
+
+    fun setSplash(state: Boolean){
+        val editor = preferences.edit()
+        editor.putBoolean(SPLASH, state)
         editor.apply()
     }
 
@@ -37,6 +44,10 @@ class UserPreference(context: Context) {
 
     fun getUserToken(): String?{
         return preferences.getString(TOKEN, null)
+    }
+
+    fun getSplashState(): Boolean?{
+        return preferences.getBoolean(SPLASH, true)
     }
 
     fun clearPreference(){

@@ -67,4 +67,8 @@ sealed class BottomBarScreen(
     object Info: BottomBarScreen("info"){
         fun createRoute() = "info"
     }
+
+    object Welcome: BottomBarScreen("welcome"){
+        fun createRoute() = "welcome"
+    }
 }
