@@ -55,26 +55,12 @@ fun ArticleItem(
         ),
     ) {
         Column {
-//            Image(
-//                painter = painterResource(article.image_url),
-//                contentDescription = null,
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(height)
-//            )
             GlideImage(
                 model = article.image_url,
                 contentDescription = "Image",
                 modifier = modifier
                     .height(height)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp))
-                    .border(
-                        1.dp,
-                        shape = RoundedCornerShape(16.dp),
-                        color = Color.Gray.copy(alpha = 0.3f)
-                    ),
+                    .fillMaxWidth(),
                 contentScale = ContentScale.Crop
             ) {
                 it
