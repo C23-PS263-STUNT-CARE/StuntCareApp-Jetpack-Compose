@@ -24,6 +24,7 @@ import com.febiarifin.stuntcare.ui.screen.check.form.FormCopyCheckScreen
 import com.febiarifin.stuntcare.ui.screen.check.form.FormUpdateCheckScreen
 import com.febiarifin.stuntcare.ui.screen.detail.article.DetailArticleScreen
 import com.febiarifin.stuntcare.ui.screen.detail.check.DetailCheckScreen
+import com.febiarifin.stuntcare.ui.screen.splash.AnimatedSplashScreen
 import com.febiarifin.stuntcare.ui.screen.welcome.WelcomeScreen
 import com.febiarifin.stuntcare.util.UserPreference
 
@@ -34,12 +35,12 @@ fun BottomNavGraph(navController: NavHostController) {
     val userPreference = UserPreference(context)
     var startDestination by remember { mutableStateOf("") }
 
-    if (userPreference.getSplashState() == true){
-        startDestination = BottomBarScreen.Welcome.route
+    startDestination = if(userPreference.getSplashState()){
+        BottomBarScreen.Welcome.route
     }else if(userPreference.getUserToken() != null){
-        startDestination = BottomBarScreen.Home.route
+        BottomBarScreen.Home.route
     }else{
-        startDestination = BottomBarScreen.Login.route
+        BottomBarScreen.Login.route
     }
 
     NavHost(

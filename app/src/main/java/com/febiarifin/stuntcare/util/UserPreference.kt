@@ -46,7 +46,7 @@ class UserPreference(context: Context) {
         return preferences.getString(TOKEN, null)
     }
 
-    fun getSplashState(): Boolean?{
+    fun getSplashState(): Boolean{
         return preferences.getBoolean(SPLASH, true)
     }
 

@@ -94,7 +94,6 @@ fun CheckScreen(
             "Bearer " + userPreference.getUserToken().toString(),
             userPreference.getUserId().toString()
         )
-
         CheckList(
             state.data,
             navigateToDetailCheck = navigateToDetailCheck,
