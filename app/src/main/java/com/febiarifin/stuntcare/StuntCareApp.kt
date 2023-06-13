@@ -152,9 +152,9 @@ fun StuntCareLightTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = lightColorScheme(
             primary = Color(0xFF459FEB),
-            onPrimary = Color.White,
+            onPrimary = Color.Black,
             secondary = Color(0xFF3984E9),
-            onSecondary = Color.White,
+            onSecondary = Color.Black,
         ),
         content = content
     )

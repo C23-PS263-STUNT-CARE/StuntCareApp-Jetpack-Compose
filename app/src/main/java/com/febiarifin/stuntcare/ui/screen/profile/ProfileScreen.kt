@@ -136,7 +136,7 @@ fun ProfileScreen(
                     Text(
                         text = userPreference.getUserEmail().toString(),
                         style = MaterialTheme.typography.titleSmall,
-                        color = Color.Gray
+                        color = Color.Black
                     )
                 }
             }
@@ -161,7 +161,7 @@ fun ProfileScreen(
                             modifier = Modifier.fillMaxHeight(),
                             verticalArrangement = Arrangement.Center
                         ) {
-                            Text(text = "Riwayat Check Stunting", color = Color.Gray)
+                            Text(text = "Riwayat Check Stunting", color = Color.Black)
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         Column(
@@ -193,7 +193,7 @@ fun ProfileScreen(
                             modifier = Modifier.fillMaxHeight(),
                             verticalArrangement = Arrangement.Center
                         ) {
-                            Text(text = "Edukasi", color = Color.Gray)
+                            Text(text = "Edukasi", color = Color.Black)
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         Column(
@@ -227,7 +227,7 @@ fun ProfileScreen(
                             modifier = Modifier.fillMaxHeight(),
                             verticalArrangement = Arrangement.Center
                         ) {
-                            Text(text = "Info Penting", color = Color.Gray)
+                            Text(text = "Info Penting", color = Color.Black)
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         Column(
@@ -261,7 +261,7 @@ fun ProfileScreen(
                             modifier = Modifier.fillMaxHeight(),
                             verticalArrangement = Arrangement.Center
                         ) {
-                            Text(text = "Logout", color = Color.Gray)
+                            Text(text = "Logout", color = Color.Black)
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         Column(

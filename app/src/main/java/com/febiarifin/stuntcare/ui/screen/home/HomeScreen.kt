@@ -219,7 +219,7 @@ private fun BannerHeader(
                     onClick = { navigateToFormCheck() },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                 ) {
-                    Text("Cek Status Stunting")
+                    Text("Cek Status Stunting", color = Color.White)
                 }
             }
         }

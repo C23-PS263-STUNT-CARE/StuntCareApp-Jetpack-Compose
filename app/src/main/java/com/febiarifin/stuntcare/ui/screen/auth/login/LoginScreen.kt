@@ -251,7 +251,7 @@ fun LoginScreen(
 }
 
 
-@Preview
+@Preview()
 @Composable
 fun LoginScreenPreview() {
     StuntCareLightTheme {
