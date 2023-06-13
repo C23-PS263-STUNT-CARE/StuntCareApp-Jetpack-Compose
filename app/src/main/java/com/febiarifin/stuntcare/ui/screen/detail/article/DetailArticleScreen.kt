@@ -103,10 +103,10 @@ fun DetailArticleContent(
     if (article != null){
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(76.dp))
 
             LoadGlideImage(
                 path = article.image_url,

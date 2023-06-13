@@ -2,6 +2,7 @@ package com.febiarifin.stuntcare.ui.screen.auth.login
 
 import StuntCareLightTheme
 import android.app.Activity.RESULT_OK
+import android.content.res.Configuration
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -91,8 +92,7 @@ fun LoginScreen(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .fillMaxHeight()
-            .background(Color.White),
+            .fillMaxHeight(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -122,7 +122,7 @@ fun LoginScreen(
             ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email
-            )
+            ),
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
@@ -251,14 +251,14 @@ fun LoginScreen(
 }
 
 
-@Preview()
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun LoginScreenPreview() {
     StuntCareLightTheme {
         LoginScreen(
             navigateToRegister = {},
             navigateToHomeScreen = {},
-            )
+        )
     }
 }
 

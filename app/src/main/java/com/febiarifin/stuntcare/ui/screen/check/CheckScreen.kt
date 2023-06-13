@@ -94,12 +94,14 @@ fun CheckScreen(
             "Bearer " + userPreference.getUserToken().toString(),
             userPreference.getUserId().toString()
         )
+        if (state.data == null){
+            ShowProgressBar(state = true, isFillMaxSize = true)
+        }
         CheckList(
             state.data,
             navigateToDetailCheck = navigateToDetailCheck,
             navigateToFormCheck = navigateToFormCheck,
         )
-        ShowProgressBar(state = state.loading, isFillMaxSize = true)
     }
 }
 
@@ -155,12 +157,7 @@ fun CheckList(
                             onClick = { navigateToFormCheck() },
                             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                         ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_add),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = modifier.width(6.dp))
-                            Text("Cek Status Stunting")
+                            Text("Cek Status Stunting", color = Color.White)
                         }
                     }
                 }

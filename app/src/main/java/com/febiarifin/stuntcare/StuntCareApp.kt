@@ -1,8 +1,10 @@
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -12,6 +14,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
@@ -148,7 +153,9 @@ fun RowScope.AddItem(
 }
 
 @Composable
-fun StuntCareLightTheme(content: @Composable () -> Unit) {
+fun StuntCareLightTheme(
+    content: @Composable () -> Unit
+) {
     MaterialTheme(
         colorScheme = lightColorScheme(
             primary = Color(0xFF459FEB),
@@ -156,7 +163,7 @@ fun StuntCareLightTheme(content: @Composable () -> Unit) {
             secondary = Color(0xFF3984E9),
             onSecondary = Color.Black,
         ),
-        content = content
+        content = content,
     )
 }
 
