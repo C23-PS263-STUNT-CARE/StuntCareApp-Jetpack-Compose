@@ -36,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.febiarifin.stuntcare.ui.common.BackPress
 import com.febiarifin.stuntcare.ui.navigation.BottomBarScreen
 import com.febiarifin.stuntcare.ui.navigation.BottomNavGraph
+import com.febiarifin.stuntcare.ui.theme.StuntCareTheme
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -170,7 +171,7 @@ fun StuntCareLightTheme(
 @Preview(showBackground = true)
 @Composable
 fun StuntCareAppPreview() {
-    StuntCareLightTheme {
+    StuntCareTheme {
         StuntCareApp()
     }
 }

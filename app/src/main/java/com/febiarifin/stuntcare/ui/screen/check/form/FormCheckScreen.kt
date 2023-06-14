@@ -326,6 +326,7 @@ fun FormCheckScreen(
                 if (state.data?.error == true) {
                     Toast.makeText(context, state.data?.message.toString(), Toast.LENGTH_SHORT)
                         .show()
+                    showSuccessDialog = true
                 }
                 state.errorMessage?.let {
                     Toast.makeText(context, it, Toast.LENGTH_SHORT).show()

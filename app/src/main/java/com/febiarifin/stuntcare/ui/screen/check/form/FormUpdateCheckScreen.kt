@@ -348,7 +348,11 @@ fun FormUpdateCheckScreen(
                         showSuccessDialog = true
                     }
                 }
-
+                if (state.data?.error == true) {
+                    Toast.makeText(context, state.data?.message.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                    showSuccessDialog = true
+                }
             }
 
             ShowProgressBar(showProgressBar)
